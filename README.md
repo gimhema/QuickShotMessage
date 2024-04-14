@@ -1,4 +1,4 @@
-1. 라이브러리같은건 필요없다.. 그냥 간단한 헤더, 소스파일만 include/import 해도 쓸수있도록
-2. 가벼워야 한다
-3. 다양한 언어를 지원할수있어야 한다.
-4. 많은 메세지를 한꺼번에 보내기보다는, 소량의 메세지를 짧은 주기로 보내야할때를 목표로하자
+1. Simple Setting, just include source file (not link lib)
+2. Light weight
+3. Support various programming launguage
+
