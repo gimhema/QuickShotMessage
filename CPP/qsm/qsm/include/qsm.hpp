@@ -41,7 +41,7 @@ class QInteger : public QValue
 public:
 	QInteger()
 	{
-
+		type = QType::QInt;
 	}
 	~QInteger()
 	{
@@ -49,6 +49,10 @@ public:
 	}
 	
 public:
+	std::string convert()
+	{
+		return "";
+	}
 
 
 public:
@@ -60,7 +64,7 @@ class QFloat : public QValue
 public:
 	QFloat()
 	{
-
+		type = QType::QFloat;
 	}
 	~QFloat()
 	{
@@ -68,7 +72,10 @@ public:
 	}
 
 public:
-
+	std::string convert()
+	{
+		return "";
+	}
 
 public:
 
@@ -81,7 +88,7 @@ class QString : public QValue
 public:
 	QString()
 	{
-
+		type = QType::QString;
 	}
 	~QString()
 	{
@@ -89,7 +96,10 @@ public:
 	}
 
 public:
-
+	std::string convert()
+	{
+		return "";
+	}
 
 public:
 
@@ -98,9 +108,10 @@ public:
 class QArray : public QValue
 {
 public:
-	QArray()
+	QArray(QType::Type _elemType)
 	{
-
+		type = QType::QArray;
+		elemType = _elemType;
 	}
 	~QArray()
 	{
@@ -108,10 +119,13 @@ public:
 	}
 
 public:
-
+	QType::Type elemType = QType::Type::Default;
 
 public:
-
+	std::string convert()
+	{
+		return "";
+	}
 };
 
 class QJson : public QValue
@@ -119,7 +133,7 @@ class QJson : public QValue
 public:
 	QJson()
 	{
-
+		type = QType::QJson;
 	}
 	~QJson()
 	{
@@ -127,7 +141,10 @@ public:
 	}
 
 public:
-
+	std::string convert()
+	{
+		return "";
+	}
 
 public:
 
@@ -145,6 +162,7 @@ public:
 
 	}
 public:
+	int MessageID;
 	std::vector<QValue> values;
 
 public:
@@ -156,6 +174,9 @@ public:
 		{
 			dest = dest + values[i].convert();
 		}
+
+		dest = std::to_string(MessageID) + dest;
+
 		return dest.c_str();
 	}
 };
@@ -163,6 +184,11 @@ public:
 
 namespace QuickShot
 {
-	
+	QMessage build_message_from_buffer(const char* buffer)
+	{
+		QMessage result;
+
+		return result;
+	}
 }
 
