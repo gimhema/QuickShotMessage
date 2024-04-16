@@ -13,13 +13,14 @@ pub enum QType {
 
 pub struct QValue 
 {
-    qType : QType
+    qType : QType,
+    data : String
 }
 
 impl QValue 
 {
-    pub fn new(_type : QType) -> QValue {
-        return QValue { qType: _type }
+    pub fn new(_type : QType, _data : String) -> QValue {
+        return QValue { qType: _type, data : _data }
     }
 
     pub fn convert() -> String {
@@ -79,3 +80,21 @@ impl QAction for QString {
         return "".to_string()
     }
 }
+
+pub struct QMessage 
+{
+    id : i64,
+    data : Vec<QValue>
+}
+
+impl QMessage {
+    pub fn new (_id : i64, _data : Vec<QValue>) -> QMessage {
+        return QMessage { id: _id , data: _data }
+    }
+}
+
+// pub fn build_message_from_buffer(buffer : &str) -> QMessage {
+// 
+// }
+
+
