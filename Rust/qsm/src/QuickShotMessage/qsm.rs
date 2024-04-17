@@ -31,6 +31,7 @@ impl QValue
 pub trait QAction {
     fn Initialize(&mut self);
     fn convert(&mut self) -> String;
+    fn convert_binary(&mut self) -> &[u8];
 }
 
 pub struct QInteger 
@@ -46,6 +47,13 @@ impl QAction for QInteger {
 
     fn convert(&mut self) -> String {
         return "".to_string()
+    }
+
+    fn convert_binary(&mut self) -> &[u8]
+    {
+        let mut ret = Vec::new();
+        ret.push(0);
+        return &ret
     }
 }
 
@@ -63,6 +71,13 @@ impl QAction for QFloat {
     fn convert(&mut self) -> String {
         return "".to_string()
     }
+
+    fn convert_binary(&mut self) -> &[u8]
+    {
+        let mut ret = Vec::new();
+        ret.push(0);
+        return &ret
+    }
 }
 
 pub struct QString 
@@ -79,19 +94,35 @@ impl QAction for QString {
     fn convert(&mut self) -> String {
         return "".to_string()
     }
+
+    fn convert_binary(&mut self) -> &[u8]
+    {
+        let mut ret = Vec::new();
+        ret.push(0);
+        return &ret
+    }
 }
 
 pub struct QMessage 
 {
     id : i64,
-    data : Vec<QValue>
+    data : Vec<u8>
 }
 
 impl QMessage {
-    pub fn new (_id : i64, _data : Vec<QValue>) -> QMessage {
+    pub fn new (_id : i64, _data : Vec<u8>) -> QMessage {
         return QMessage { id: _id , data: _data }
     }
 }
+
+// Example
+pub struct Student
+{
+    id : QInteger,
+    name : QString,
+    grade : QFloat
+}
+
 
 // pub fn build_message_from_buffer(buffer : &str) -> QMessage {
 // 
