@@ -84,17 +84,21 @@ impl QAction for QString {
 pub struct QMessage 
 {
     id : i64,
-    data : Vec<QValue>
+    data : Vec<String>
 }
 
 impl QMessage {
-    pub fn new (_id : i64, _data : Vec<QValue>) -> QMessage {
+    pub fn new (_id : i64, _data : Vec<String>) -> QMessage {
         return QMessage { id: _id , data: _data }
     }
 }
 
-// pub fn build_message_from_buffer(buffer : &str) -> QMessage {
-// 
-// }
+pub fn build_message_from_buffer(buffer : String) -> QMessage {
+    let id = 0;
+    let data = Vec::new();
+    let ret = QMessage::new(id, data);
+
+    return ret
+}
 
 
