@@ -14,13 +14,13 @@ pub enum QType {
 pub struct QValue 
 {
     qType : QType,
-    data : String
+    buffer : String
 }
 
 impl QValue 
 {
     pub fn new(_type : QType, _data : String) -> QValue {
-        return QValue { qType: _type, data : _data }
+        return QValue { qType: _type, buffer : _data }
     }
 
     pub fn convert() -> String {
@@ -31,6 +31,8 @@ impl QValue
 pub trait QAction {
     fn Initialize(&mut self);
     fn convert(&mut self) -> String;
+
+    fn get_buffer(&mut self) -> String;
 }
 
 pub struct QInteger 
@@ -46,6 +48,11 @@ impl QAction for QInteger {
 
     fn convert(&mut self) -> String {
         return "".to_string()
+    }
+
+    fn get_buffer(&mut self) -> String {
+        let mut ret = self.val.buffer.clone();
+        return ret
     }
 }
 
@@ -63,6 +70,11 @@ impl QAction for QFloat {
     fn convert(&mut self) -> String {
         return "".to_string()
     }
+
+    fn get_buffer(&mut self) -> String {
+        let mut ret = self.val.buffer.clone();
+        return ret
+    }
 }
 
 pub struct QString 
@@ -78,6 +90,11 @@ impl QAction for QString {
 
     fn convert(&mut self) -> String {
         return "".to_string()
+    }
+
+    fn get_buffer(&mut self) -> String {
+        let mut ret = self.val.buffer.clone();
+        return ret
     }
 }
 
@@ -100,5 +117,3 @@ pub fn build_message_from_buffer(buffer : String) -> QMessage {
 
     return ret
 }
-
-
