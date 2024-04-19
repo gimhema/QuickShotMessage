@@ -117,3 +117,10 @@ pub fn build_message_from_buffer(buffer : String) -> QMessage {
 
     return ret
 }
+
+pub fn seirialize(msg : QMessage) -> String {
+    let serialized = String::new();
+
+    return serialized
+}
+
