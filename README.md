@@ -7,7 +7,13 @@
 
 ## Message Format
 
+![MessageArch](readme02_2.PNG)
 
+![Format](readme01.PNG)
+
+![Format Example](readme04.PNG)
+
+![Format Example02](readme02.PNG)
 
 ## Example
 
