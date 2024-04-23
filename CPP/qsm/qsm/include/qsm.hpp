@@ -28,7 +28,7 @@ public:
 	}
 public:
 	QType::Type type = QType::Type::Default;
-	std::string value = "";
+	std::string buffer = "";
 public:
 	std::string convert()
 	{
