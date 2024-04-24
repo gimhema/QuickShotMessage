@@ -31,7 +31,6 @@ impl QValue
 pub trait QAction {
     fn Initialize(&mut self);
     fn convert(&mut self) -> String;
-
     fn get_buffer(&mut self) -> String;
 }
 
@@ -110,7 +109,7 @@ impl QMessage {
     }
 }
 
-pub fn build_message_from_buffer(buffer : String) -> QMessage {
+pub fn deseirialize(buffer : String) -> QMessage {
     let id = 0;
     let data = Vec::new();
     let ret = QMessage::new(id, data);
