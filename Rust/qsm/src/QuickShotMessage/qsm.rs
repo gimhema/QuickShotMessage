@@ -11,6 +11,7 @@ pub enum QType {
     QJson
 }
 
+
 pub struct QValue 
 {
     qType : QType,
@@ -95,6 +96,19 @@ impl QAction for QString {
     fn get_buffer(&mut self) -> String {
         let mut ret = self.val.buffer.clone();
         return ret
+    }
+}
+
+pub struct QArray
+{
+    val : QValue,
+    elem_type : QType,
+    data : String
+}
+
+impl QArray {
+    pub fn new (_val : QValue, _elem_type : QType, _data : String) -> QArray {
+        return QArray { val: _val, elem_type : _elem_type, data: _data }
     }
 }
 
