@@ -14,13 +14,13 @@ pub enum QType {
 pub struct QValue 
 {
     qType : QType,
-    meta_data : i32,
+    meta_data : usize,
     buffer : String
 }
 
 impl QValue 
 {
-    pub fn new(_type : QType, _meta_data : i32, _data : String) -> QValue {
+    pub fn new(_type : QType, _meta_data : usize, _data : String) -> QValue {
         return QValue { qType: _type, meta_data: _meta_data, buffer : _data }
     }
 
