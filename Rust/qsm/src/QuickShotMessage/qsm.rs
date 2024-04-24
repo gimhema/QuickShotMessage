@@ -111,13 +111,25 @@ impl QMessage {
 
 pub fn deseirialize(buffer : String) -> QMessage {
     let id = 0;
-    let data = Vec::new();
-    let ret = QMessage::new(id, data);
+        
+        /*
+        for _data
+            get TYPE from _data
+            get META_DATA from _data
+            get VALUE from _data
+            Assemble data 
+            push data to datas
+         */
+    let datas = Vec::new();
+
+
+    let ret = QMessage::new(id, datas);
 
     return ret
 }
 
 pub fn seirialize(msg : QMessage) -> String {
+    // id + data . . .
     let serialized = String::new();
 
     return serialized
