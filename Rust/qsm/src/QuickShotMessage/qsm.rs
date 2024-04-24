@@ -106,12 +106,20 @@ pub struct QArray
     data : String
 }
 
-impl QArray {
-    pub fn new (_val : QValue, _elem_type : QType, _data : String) -> QArray {
-        return QArray { val: _val, elem_type : _elem_type, data: _data }
+impl QAction for QArray {
+    fn Initialize(&mut self) {
+        
+    }
+
+    fn convert(&mut self) -> String {
+        return "".to_string()
+    }
+
+    fn get_buffer(&mut self) -> String {
+        let mut ret = self.val.buffer.clone();
+        return ret
     }
 }
-
 pub struct QMessage 
 {
     id : i64,
@@ -122,6 +130,11 @@ impl QMessage {
     pub fn new (_id : i64, _data : Vec<String>) -> QMessage {
         return QMessage { id: _id , data: _data }
     }
+}
+
+pub trait MessageBuilder
+{
+    fn message_build(self) -> QMessage;
 }
 
 pub fn deseirialize(buffer : String) -> QMessage {
