@@ -51,13 +51,16 @@ pub struct QInteger
 
 impl QInteger {
     pub fn new(data : i64) -> QInteger {
-        return QInteger {val : QValue::new_zero(QType::QInt), data}
+        let mut ret = QInteger {val : QValue::new_zero(QType::QInt), data};
+        ret.Initialize();
+        return ret
     }
 }
 
 impl QAction for QInteger {
     fn Initialize(&mut self) {
-        
+        self.val.meta_data = 0; // QInteger not use meta data
+        self.val.buffer = "[0:" + "0:" + self.data.to_string() + "]"; 
     }
 
     fn get_value(&mut self) -> QValue {
