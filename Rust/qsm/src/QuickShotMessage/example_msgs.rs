@@ -11,18 +11,18 @@ pub struct Person
     grade : QArray
 }
 
-impl MessageBuilder for Person
-{
-    fn message_build(mut self) -> QMessage {
-        let mut _data = Vec::new();
-
-        _data.push(self.name.convert());
-        _data.push(self.age.convert());
-        _data.push(self.height.convert());
-        _data.push(self.grade.convert());
-
-        let mut ret = QMessage::new(self.id, _data);
-
-        return ret
-    }
-}
+// impl MessageBuilder for Person
+// {
+// //    fn message_build(mut self) -> QMessage {
+// //        let mut _data = Vec::new();
+// //
+// //        _data.push(self.name.convert());
+// //        _data.push(self.age.convert());
+// //        _data.push(self.height.convert());
+// //        _data.push(self.grade.convert());
+// //
+// //        let mut ret = QMessage::new(self.id, _data);
+// //
+// //        return ret
+// //    }
+// }

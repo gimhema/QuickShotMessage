@@ -2,6 +2,7 @@ use std::collections::VecDeque;
 
 // <ID>:<SIZE>:{[<TYPE>:<META_DATA>:<VALUE>][<TYPE>:<META_DATA>:<VALUE>][<TYPE>:<META_DATA>:<VALUE>]...}
 
+#[derive(Debug, Clone)]
 pub enum QType {
     DEFAULT,
     QInt,
@@ -24,7 +25,7 @@ pub fn QTypeToValue(_qType : QType) -> i32{
     return -1
 }
 
-
+#[derive(Debug, Clone)]
 pub struct QValue 
 {
     qType : QType,
@@ -72,12 +73,14 @@ impl QInteger {
 
 impl QAction for QInteger {
     fn Initialize(&mut self) {
+
         self.val.meta_data = 0; // QInteger not use meta data
-        self.val.buffer = "[" + QTypeToValue(self.val.qType).to_string() + ":" + self.val.meta_data + ":" + self.data.to_string() + "]"; 
+
+        self.val.buffer = "[".to_owned() + &QTypeToValue(self.val.qType.clone()).to_string() + ":" + &self.val.meta_data.to_string() + ":" + &self.data.to_string() + "]"; 
     }
 
     fn get_value(&mut self) -> QValue {
-        return self.val
+        return self.val.clone()
     }
 
     fn get_buffer(&mut self) -> String {
@@ -104,11 +107,11 @@ impl QFloat {
 impl QAction for QFloat {
     fn Initialize(&mut self) {
         self.val.meta_data = 0; // QFloat not use meta data
-        self.val.buffer = "[" + QTypeToValue(self.val.qType).to_string() + ":" + self.val.meta_data + ":" + self.data.to_string() + "]"; 
+//        self.val.buffer = "[" + QTypeToValue(self.val.qType).to_string() + ":" + self.val.meta_data + ":" + self.data.to_string() + "]"; 
     }
 
     fn get_value(&mut self) -> QValue {
-        return self.val
+        return self.val.clone()
     }
 
     fn get_buffer(&mut self) -> String {
@@ -130,7 +133,7 @@ impl QAction for QString {
     }
 
     fn get_value(&mut self) -> QValue {
-        return self.val
+        return self.val.clone()
     }
 
     fn get_buffer(&mut self) -> String {
@@ -153,7 +156,7 @@ impl QAction for QArray {
     }
 
     fn get_value(&mut self) -> QValue {
-        return self.val
+        return self.val.clone()
     }
 
     fn get_buffer(&mut self) -> String {
