@@ -11,6 +11,19 @@ pub enum QType {
     QJson
 }
 
+pub fn QTypeToValue(_qType : QType) -> i32{
+    match _qType {
+        QType::DEFAULT => return 0,
+        QType::QInt => return 1,
+        QType::QFloat => return 2,
+        QType::QString => return 3,
+        QType::QArray => return 4,
+        _ => return -1
+    };
+
+    return -1
+}
+
 
 pub struct QValue 
 {
@@ -60,7 +73,7 @@ impl QInteger {
 impl QAction for QInteger {
     fn Initialize(&mut self) {
         self.val.meta_data = 0; // QInteger not use meta data
-        self.val.buffer = "[0:" + "0:" + self.data.to_string() + "]"; 
+        self.val.buffer = "[" + QTypeToValue(self.val.qType).to_string() + ":" + self.val.meta_data + ":" + self.data.to_string() + "]"; 
     }
 
     fn get_value(&mut self) -> QValue {
@@ -80,9 +93,18 @@ pub struct QFloat
     data : f64
 }
 
+impl QFloat {
+    pub fn new(data : f64) -> QFloat {
+        let mut ret = QFloat {val : QValue::new_zero(QType::QFloat), data};
+        ret.Initialize();
+        return ret
+    }
+}
+
 impl QAction for QFloat {
     fn Initialize(&mut self) {
-        
+        self.val.meta_data = 0; // QFloat not use meta data
+        self.val.buffer = "[" + QTypeToValue(self.val.qType).to_string() + ":" + self.val.meta_data + ":" + self.data.to_string() + "]"; 
     }
 
     fn get_value(&mut self) -> QValue {
