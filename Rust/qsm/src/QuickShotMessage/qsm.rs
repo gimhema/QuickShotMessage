@@ -75,7 +75,6 @@ impl QAction for QInteger {
     fn Initialize(&mut self) {
 
         self.val.meta_data = 0; // QInteger not use meta data
-
         self.val.buffer = "[".to_owned() + &QTypeToValue(self.val.qType.clone()).to_string() + ":" + &self.val.meta_data.to_string() + ":" + &self.data.to_string() + "]"; 
     }
 
@@ -107,7 +106,7 @@ impl QFloat {
 impl QAction for QFloat {
     fn Initialize(&mut self) {
         self.val.meta_data = 0; // QFloat not use meta data
-//        self.val.buffer = "[" + QTypeToValue(self.val.qType).to_string() + ":" + self.val.meta_data + ":" + self.data.to_string() + "]"; 
+        self.val.buffer = "[".to_owned() + &QTypeToValue(self.val.qType.clone()).to_string() + ":" + &self.val.meta_data.to_string() + ":" + &self.data.to_string() + "]"; 
     }
 
     fn get_value(&mut self) -> QValue {
@@ -127,9 +126,18 @@ pub struct QString
     data : String
 }
 
+impl QString {
+    pub fn new(_data : String) -> QString {
+        let mut ret = QString {val : QValue::new_zero(QType::QString), data : _data};
+        ret.Initialize();
+        return ret
+    }
+}
+
 impl QAction for QString {
     fn Initialize(&mut self) {
-        
+        self.val.meta_data = self.data.len().clone(); // QString use meta data as length
+        self.val.buffer = "[".to_owned() + &QTypeToValue(self.val.qType.clone()).to_string() + ":" + &self.val.meta_data.to_string() + ":" + &self.data + "]";         
     }
 
     fn get_value(&mut self) -> QValue {
