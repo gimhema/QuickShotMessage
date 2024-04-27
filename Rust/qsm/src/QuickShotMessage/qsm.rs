@@ -1,6 +1,6 @@
 use std::collections::VecDeque;
 
-
+// <ID>:<SIZE>:{[<TYPE>:<META_DATA>:<VALUE>][<TYPE>:<META_DATA>:<VALUE>][<TYPE>:<META_DATA>:<VALUE>]...}
 
 pub enum QType {
     DEFAULT,
@@ -30,6 +30,8 @@ impl QValue
     }
 }
 
+
+// [<TYPE>:<META_DATA>:<VALUE>]
 pub trait QAction {
     fn Initialize(&mut self);
     fn convert(&mut self) -> String;
@@ -57,6 +59,7 @@ impl QAction for QInteger {
     }
 }
 
+// [<TYPE>:<META_DATA>:<VALUE>]
 pub struct QFloat 
 {
     val : QValue,
@@ -78,6 +81,7 @@ impl QAction for QFloat {
     }
 }
 
+// [<TYPE>:<META_DATA>:<VALUE>]
 pub struct QString 
 {
     val : QValue,
@@ -99,6 +103,7 @@ impl QAction for QString {
     }
 }
 
+// [<TYPE>:<META_DATA>:<VALUE>]
 pub struct QArray
 {
     val : QValue,
@@ -123,12 +128,13 @@ impl QAction for QArray {
 pub struct QMessage 
 {
     id : i64,
+    size : usize,
     data : Vec<String>
 }
 
 impl QMessage {
-    pub fn new (_id : i64, _data : Vec<String>) -> QMessage {
-        return QMessage { id: _id , data: _data }
+    pub fn new (_id : i64, _size : usize, _data : Vec<String>) -> QMessage {
+        return QMessage { id: _id, size : _size , data: _data }
     }
 }
 
@@ -149,9 +155,10 @@ pub fn deseirialize(buffer : String) -> QMessage {
             push data to datas
          */
     let datas = Vec::new();
+    let _size = datas.len();
 
 
-    let ret = QMessage::new(id, datas);
+    let ret = QMessage::new(id, _size, datas);
 
     return ret
 }
