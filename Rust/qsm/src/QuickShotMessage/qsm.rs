@@ -151,14 +151,22 @@ impl QAction for QString {
 }
 
 // [<TYPE>:<META_DATA>:<VALUE>]
-pub struct QArray
+pub struct QArray<T>
 {
     val : QValue,
     elem_type : QType,
-    data : String
+    data : Vec<T>
 }
 
-impl QAction for QArray {
+// impl QArray {
+//     pub fn new(_data : String) -> QArray {
+//         let mut ret = QArray {val : QValue::new_zero(QType::QArray), data : _data};
+//         ret.Initialize();
+//         return ret
+//     }
+// }
+
+impl<T> QAction for QArray<T> {
     fn Initialize(&mut self) {
         
     }

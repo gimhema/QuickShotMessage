@@ -2,14 +2,14 @@
 use super::qsm::*;
 
 
-pub struct Person
-{
-    id : i64,
-    name : QString,
-    age : QInteger,
-    height : QFloat,
-    grade : QArray
-}
+// pub struct Person
+// {
+//     id : i64,
+//     name : QString,
+//     age : QInteger,
+//     height : QFloat,
+//     grade : QArray
+// }
 
 // impl MessageBuilder for Person
 // {
