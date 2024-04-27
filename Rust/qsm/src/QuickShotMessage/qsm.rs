@@ -21,6 +21,10 @@ pub struct QValue
 
 impl QValue 
 {
+    pub fn new_zero(_qType : QType) -> QValue {
+        return QValue { qType: _qType, meta_data: 0, buffer: String::new() }
+    }
+
     pub fn new(_type : QType, _meta_data : usize, _data : String) -> QValue {
         return QValue { qType: _type, meta_data: _meta_data, buffer : _data }
     }
@@ -31,17 +35,24 @@ impl QValue
 }
 
 
-// [<TYPE>:<META_DATA>:<VALUE>]
+
 pub trait QAction {
     fn Initialize(&mut self);
-    fn convert(&mut self) -> String;
+    fn get_value(&mut self) -> QValue;
     fn get_buffer(&mut self) -> String;
 }
 
+// [<TYPE>:<META_DATA>:<VALUE>]
 pub struct QInteger 
 {
     val : QValue,
     data : i64
+}
+
+impl QInteger {
+    pub fn new(data : i64) -> QInteger {
+        return QInteger {val : QValue::new_zero(QType::QInt), data}
+    }
 }
 
 impl QAction for QInteger {
@@ -49,8 +60,8 @@ impl QAction for QInteger {
         
     }
 
-    fn convert(&mut self) -> String {
-        return "".to_string()
+    fn get_value(&mut self) -> QValue {
+        return self.val
     }
 
     fn get_buffer(&mut self) -> String {
@@ -71,8 +82,8 @@ impl QAction for QFloat {
         
     }
 
-    fn convert(&mut self) -> String {
-        return "".to_string()
+    fn get_value(&mut self) -> QValue {
+        return self.val
     }
 
     fn get_buffer(&mut self) -> String {
@@ -93,8 +104,8 @@ impl QAction for QString {
         
     }
 
-    fn convert(&mut self) -> String {
-        return "".to_string()
+    fn get_value(&mut self) -> QValue {
+        return self.val
     }
 
     fn get_buffer(&mut self) -> String {
@@ -116,8 +127,8 @@ impl QAction for QArray {
         
     }
 
-    fn convert(&mut self) -> String {
-        return "".to_string()
+    fn get_value(&mut self) -> QValue {
+        return self.val
     }
 
     fn get_buffer(&mut self) -> String {
