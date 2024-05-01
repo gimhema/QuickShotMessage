@@ -158,13 +158,17 @@ pub struct QArray<T>
     data : Vec<T>
 }
 
-// impl QArray {
-//     pub fn new(_data : String) -> QArray {
-//         let mut ret = QArray {val : QValue::new_zero(QType::QArray), data : _data};
-//         ret.Initialize();
-//         return ret
-//     }
-// }
+impl<T> QArray<T> {
+    pub fn new(_data: Vec<T>, _elem_type : QType) -> QArray<T> {
+        let mut ret = QArray {
+            val: QValue::new_zero(QType::QArray),
+            elem_type: _elem_type, // 이 부분은 원하는 타입으로 설정해야 합니다.
+            data: _data,
+        };
+        ret.Initialize();
+        return ret;
+    }
+}
 
 impl<T> QAction for QArray<T> {
     fn Initialize(&mut self) {
