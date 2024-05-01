@@ -1,5 +1,7 @@
 use std::collections::VecDeque;
-
+use std::string::ToString;
+use std::any::type_name;
+use std::any::TypeId;
 // <ID>:<SIZE>:{[<TYPE>:<META_DATA>:<VALUE>][<TYPE>:<META_DATA>:<VALUE>][<TYPE>:<META_DATA>:<VALUE>]...}
 
 #[derive(Debug, Clone)]
@@ -21,9 +23,11 @@ pub fn QTypeToValue(_qType : QType) -> i32{
         QType::QArray => return 4,
         _ => return -1
     };
-
     return -1
 }
+
+
+
 
 #[derive(Debug, Clone)]
 pub struct QValue 
@@ -158,11 +162,11 @@ pub struct QArray<T>
     data : Vec<T>
 }
 
-impl<T> QArray<T> {
+impl<T: std::fmt::Display> QArray<T> {
     pub fn new(_data: Vec<T>, _elem_type : QType) -> QArray<T> {
         let mut ret = QArray {
             val: QValue::new_zero(QType::QArray),
-            elem_type: _elem_type, // 이 부분은 원하는 타입으로 설정해야 합니다.
+            elem_type: _elem_type,
             data: _data,
         };
         ret.Initialize();
@@ -170,9 +174,27 @@ impl<T> QArray<T> {
     }
 }
 
-impl<T> QAction for QArray<T> {
+fn perform_action_by_type(value: &dyn std::fmt::Display) -> String {
+    value.to_string()
+}
+
+
+// [<TYPE>:<META_DATA>:<ELEM_TYPE>=<VALUE>,<VALUE>,<VALUE>,<VALUE>,<VALUE>, . . .]
+impl<T: std::fmt::Display> QAction for QArray<T> {
     fn Initialize(&mut self) {
-        
+        self.val.meta_data = self.data.len(); // QArray uses meta data as length
+    
+        self.val.buffer = "[".to_owned() + &QTypeToValue(self.val.qType.clone()).to_string()
+            + ":" + &self.val.meta_data.to_string() + ":" + &QTypeToValue(self.elem_type.clone()).to_string() + "=";
+    
+            for elem in &self.data {
+                let _elem_buf = perform_action_by_type(elem);
+                self.val.buffer += &_elem_buf;
+                self.val.buffer += ",";
+            }
+            
+    
+        self.val.buffer += "]";
     }
 
     fn get_value(&mut self) -> QValue {
@@ -184,6 +206,7 @@ impl<T> QAction for QArray<T> {
         return ret
     }
 }
+
 pub struct QMessage 
 {
     id : i64,
