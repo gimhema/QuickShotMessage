@@ -179,13 +179,13 @@ fn perform_action_by_type(value: &dyn std::fmt::Display) -> String {
 }
 
 
-// [<TYPE>:<META_DATA>:<ELEM_TYPE>=<VALUE>,<VALUE>,<VALUE>,<VALUE>,<VALUE>, . . .]
+// [<TYPE>:<META_DATA>:=<ELEM_TYPE>=<VALUE>,<VALUE>,<VALUE>,<VALUE>,<VALUE>, . . .]
 impl<T: std::fmt::Display> QAction for QArray<T> {
     fn Initialize(&mut self) {
         self.val.meta_data = self.data.len(); // QArray uses meta data as length
     
         self.val.buffer = "[".to_owned() + &QTypeToValue(self.val.qType.clone()).to_string()
-            + ":" + &self.val.meta_data.to_string() + ":" + &QTypeToValue(self.elem_type.clone()).to_string() + "=";
+            + ":" + &self.val.meta_data.to_string() + ":" + "=" + &QTypeToValue(self.elem_type.clone()).to_string() + "=";
     
             for elem in &self.data {
                 let _elem_buf = perform_action_by_type(elem);
