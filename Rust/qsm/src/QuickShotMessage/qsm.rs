@@ -207,11 +207,13 @@ impl<T: std::fmt::Display> QAction for QArray<T> {
     }
 }
 
+
+// <ID>:<SIZE>:{[<TYPE>:<META_DATA>:<VALUE>][<TYPE>:<META_DATA>:<VALUE>][<TYPE>:<META_DATA>:<VALUE>]...}
 pub struct QMessage 
 {
-    id : i64,
-    size : usize,
-    data : Vec<String>
+    id : i64, // <ID>
+    size : usize, // <SIZE>
+    data : Vec<String> // {[<TYPE>:<META_DATA>:<VALUE>]. . .}
 }
 
 impl QMessage {
