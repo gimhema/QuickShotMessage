@@ -27,3 +27,14 @@ impl MessageBuilder for Person
         return ret
     }
 }
+
+impl Person {
+    pub fn new(
+        _id : i64,
+        _name : QString,
+        _age : QInteger,
+        _height : QFloat,
+        _grade : QArray<i64> ) -> Self {
+        return Person { id: _id, name: _name, age: _age, height: _height, grade: _grade }
+    }
+}
