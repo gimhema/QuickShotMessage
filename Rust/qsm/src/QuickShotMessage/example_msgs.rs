@@ -1,6 +1,6 @@
 
 use super::qsm::*;
-
+use std::time::{Instant};
 
 pub struct Person
 {
@@ -41,10 +41,18 @@ impl Person {
 
 pub fn PersonTest()
 {
+
+    let start = Instant::now();
+
     let person = Person::new(1, QString::new("John".to_string()), QInteger::new(14), QFloat::new(172.3),
 QArray::new(vec![10, 32, 47], QType::QInt));
 
     let person_message = person.message_build();
 
-    // println!("Message : {}", person_message.)
+    println!("Message : {:?}", person_message.get_data());
+
+    let end = Instant::now();
+
+    let elapsed_time = end - start;
+    println!("time out: {:?}", elapsed_time);
 }
