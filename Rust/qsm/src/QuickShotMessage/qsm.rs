@@ -220,6 +220,18 @@ impl QMessage {
     pub fn new (_id : i64, _size : usize, _data : Vec<String>) -> QMessage {
         return QMessage { id: _id, size : _size , data: _data }
     }
+
+    pub fn get_id (self) -> i64 {
+        return self.id.clone()
+    }
+
+    pub fn get_size (self) -> usize {
+        return self.size.clone()
+    }
+
+    pub fn get_data (self) -> Vec<String> {
+        return self.data.clone()
+    }
 }
 
 pub trait MessageBuilder
