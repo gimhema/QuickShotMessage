@@ -221,15 +221,15 @@ impl QMessage {
         return QMessage { id: _id, size : _size , data: _data }
     }
 
-    pub fn get_id (self) -> i64 {
+    pub fn get_id (&mut self) -> i64 {
         return self.id.clone()
     }
 
-    pub fn get_size (self) -> usize {
+    pub fn get_size (&mut self) -> usize {
         return self.size.clone()
     }
 
-    pub fn get_data (self) -> Vec<String> {
+    pub fn get_data (&mut self) -> Vec<String> {
         return self.data.clone()
     }
 }

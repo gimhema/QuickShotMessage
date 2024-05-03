@@ -15,14 +15,22 @@ impl MessageBuilder for Person
 {
     fn message_build(mut self) -> QMessage {
         let mut _data = Vec::new();
+        let mut _size = 0;
 
         _data.push(self.name.get_buffer());
-        _data.push(self.age.get_buffer());
-        _data.push(self.height.get_buffer());
-        _data.push(self.grade.get_buffer());
+        _size += self.name.get_buffer().len();
 
+        _data.push(self.age.get_buffer());
+        _size += self.age.get_buffer().len();
+
+        _data.push(self.height.get_buffer());
+        _size += self.height.get_buffer().len();
+
+        _data.push(self.grade.get_buffer());
+        _size += self.grade.get_buffer().len();
+        
         // size는 임시
-        let mut ret = QMessage::new(self.id,0, _data);
+        let mut ret = QMessage::new(self.id,_size, _data);
 
         return ret
     }
@@ -39,20 +47,29 @@ impl Person {
     }
 }
 
-pub fn PersonTest()
+pub fn TEST_Seriialize()
 {
 
+    // Struct -> Message
     let start = Instant::now();
 
     let person = Person::new(1, QString::new("John".to_string()), QInteger::new(14), QFloat::new(172.3),
 QArray::new(vec![10, 32, 47], QType::QInt));
 
-    let person_message = person.message_build();
+    let mut person_message = person.message_build();
 
+    println!("Id : {}", person_message.get_id().clone());
+    println!("Size : {}", person_message.get_size().clone());
     println!("Message : {:?}", person_message.get_data());
 
     let end = Instant::now();
 
     let elapsed_time = end - start;
     println!("time out: {:?}", elapsed_time);
+}
+
+pub fn TEST_Deseriialize()
+{
+    // Message -> Struct
+    let msg = "";
 }

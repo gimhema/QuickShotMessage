@@ -1,9 +1,12 @@
 mod QuickShotMessage;
 
-use QuickShotMessage::*;
+use QuickShotMessage::{*, example_msgs::TEST_Deseriialize};
 
-use crate::example_msgs::PersonTest;
+use crate::example_msgs::TEST_Seriialize;
 
 fn main() {
-    PersonTest();
+    
+    TEST_Seriialize();
+
+    TEST_Deseriialize();
 }
