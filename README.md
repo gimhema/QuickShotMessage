@@ -51,7 +51,6 @@ impl MessageBuilder for Person
         _data.push(self.grade.get_buffer());
         _size += self.grade.get_buffer().len();
         
-        // size는 임시
         let mut ret = QMessage::new(self.id,_size, _data);
 
         return ret
@@ -71,8 +70,6 @@ impl Person {
 
 pub fn TEST_Seriialize()
 {
-
-    // Struct -> Message
 
     let person = Person::new(1, QString::new("John".to_string()), QInteger::new(14), QFloat::new(172.3),
 QArray::new(vec![10, 32, 47], QType::QInt));
