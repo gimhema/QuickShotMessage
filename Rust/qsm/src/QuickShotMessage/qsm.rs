@@ -26,6 +26,27 @@ pub fn QTypeToValue(_qType : QType) -> i32{
     return -1
 }
 
+pub struct QTuple<T> {
+    field: (i32, i64, f64, String, Vec<T>)
+}
+
+impl<T: std::fmt::Display> QTuple<T> {
+    pub fn new_zero() -> Self {
+        return QTuple { field: (0, 0, 0.0, "".to_string(), Vec::new()) };
+    }
+}
+
+// pub fn deseirialize_qvalue(qType : QType, buffer : String) -> QTuple<T> {
+//     match qType {
+//         QType::DEFAULT => {return QTuple::new_zero()},
+//         QType::QInt => return 1,
+//         QType::QFloat => return 2,
+//         QType::QString => return 3,
+//         QType::QArray => return 4,
+//         _ => return -1
+//     };
+//     return QTuple::new_zero()
+// }
 
 
 
