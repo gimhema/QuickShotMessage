@@ -192,8 +192,8 @@ impl<T: std::fmt::Display> QAction for QArray<T> {
                 self.val.buffer += &_elem_buf;
                 self.val.buffer += ",";
             }
+            self.val.buffer.pop();
             
-    
         self.val.buffer += "]";
     }
 
@@ -259,9 +259,20 @@ pub fn deseirialize(buffer : String) -> QMessage {
     return ret
 }
 
-pub fn seirialize(msg : QMessage) -> String {
+// <ID>:<SIZE>:{[<TYPE>:<META_DATA>:<VALUE>][<TYPE>:<META_DATA>:<VALUE>][<TYPE>:<META_DATA>:<VALUE>]...}
+pub fn seirialize(mut msg : QMessage) -> String {
     // id + data . . .
-    let serialized = String::new();
+    
+    let mut serialized = msg.get_id().to_string() + ":"
+     + &msg.get_size().to_string() + ":" + "{";
+
+     for elem in &msg.data {
+        serialized += elem;
+        
+    } 
+
+    serialized += "}";
+
 
     return serialized
 }

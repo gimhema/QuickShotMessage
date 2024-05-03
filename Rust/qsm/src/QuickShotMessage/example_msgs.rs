@@ -66,6 +66,16 @@ QArray::new(vec![10, 32, 47], QType::QInt));
 
     let elapsed_time = end - start;
     println!("time out: {:?}", elapsed_time);
+
+
+    let m_crate_start = Instant::now();
+
+    println!("Created Message : {}", seirialize(person_message));
+
+    let m_crate_end = Instant::now();
+
+    let m_crate_elapsed_time = m_crate_end - m_crate_start;
+    println!("message create time out: {:?}", m_crate_elapsed_time);
 }
 
 pub fn TEST_Deseriialize()
