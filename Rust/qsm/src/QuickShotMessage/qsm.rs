@@ -1,3 +1,4 @@
+use core::num::dec2flt::parse;
 use std::collections::VecDeque;
 use std::string::ToString;
 use std::any::type_name;
@@ -34,19 +35,42 @@ impl<T: std::fmt::Display> QTuple<T> {
     pub fn new_zero() -> Self {
         return QTuple { field: (0, 0, 0.0, "".to_string(), Vec::new()) };
     }
+    pub fn new(qinteger : i64, qfloat : f64, qstring : String, qvec : Vec<T>) -> Self {
+        return QTuple { field: (0, qinteger, qfloat, qstring, qvec) }
+    }
 }
 
-// pub fn deseirialize_qvalue(qType : QType, buffer : String) -> QTuple<T> {
-//     match qType {
-//         QType::DEFAULT => {return QTuple::new_zero()},
-//         QType::QInt => return 1,
-//         QType::QFloat => return 2,
-//         QType::QString => return 3,
-//         QType::QArray => return 4,
-//         _ => return -1
-//     };
-//     return QTuple::new_zero()
-// }
+pub fn deseirialize_qvalue(qType : QType, qArrElemType : QType, buffer : String) -> QTuple<T> {
+    match qType {
+        QType::DEFAULT => {return QTuple::new_zero()},
+        QType::QInt => {
+
+            let parsed_i64: Result<i64, _> = buffer.parse();
+            match parsed_i64 {
+                Ok(num) => return QTuple::new(num, 0.0, "".to_string(), Vec::new()),
+                Err(_) => println!("Convert Error ! !"),
+            };
+
+        },
+        QType::QFloat => {
+
+            let parsed_f64: Result<f64, _> = buffer.parse();
+            match parsed_f64 {
+                Ok(num) => return QTuple::new(0, num, "".to_string(), Vec::new()),
+                Err(_) => println!("Convert Error ! !"),
+            };
+
+        },
+        QType::QString => {
+            return QTuple::new(0, 0.0, buffer, Vec::new())
+        },
+        QType::QArray => {
+            
+        },
+        _ => return -1
+    };
+    return QTuple::new_zero();
+}
 
 
 
