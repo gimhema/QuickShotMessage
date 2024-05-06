@@ -3,6 +3,7 @@ use std::collections::VecDeque;
 use std::string::ToString;
 use std::any::type_name;
 use std::any::TypeId;
+use regex::Regex;
 // <ID>:<SIZE>:{[<TYPE>:<META_DATA>:<VALUE>][<TYPE>:<META_DATA>:<VALUE>][<TYPE>:<META_DATA>:<VALUE>]...}
 
 #[derive(Debug, Clone)]
@@ -29,6 +30,10 @@ pub fn QTypeToValue(_qType : QType) -> i32{
 
 pub struct QTuple<T> {
     field: (i32, i64, f64, String, Vec<T>)
+}
+
+pub struct QUnpacked<T> {
+    data : Vec<QTuple<T>>
 }
 
 impl<T: std::fmt::Display> QTuple<T> {
@@ -259,7 +264,7 @@ impl<T: std::fmt::Display> QAction for QArray<T> {
 // <ID>:<SIZE>:{[<TYPE>:<META_DATA>:<VALUE>][<TYPE>:<META_DATA>:<VALUE>][<TYPE>:<META_DATA>:<VALUE>]...}
 pub struct QMessage 
 {
-    id : i64, // <ID>
+    id : i64, // <ID> for RPC
     size : usize, // <SIZE>
     data : Vec<String> // {[<TYPE>:<META_DATA>:<VALUE>]. . .}
 }
@@ -288,25 +293,23 @@ pub trait MessageBuilder
     fn unpack_message(self, buffer : String) -> Self;
 }
 
-pub fn deseirialize(buffer : String) -> QMessage {
-    let id = 0;
-        
-        /*
-        for _data
-            get TYPE from _data
-            get META_DATA from _data
-            get VALUE from _data
-            Assemble data 
-            push data to datas
-         */
-    let datas = Vec::new();
-    let _size = datas.len();
 
-
-    let ret = QMessage::new(id, _size, datas);
-
-    return ret
+pub fn deseirialize(input: &str) -> Option<(u32, u32, String)> {
+    // 정규 표현식을 사용하여 문자열을 분석
+    let re = Regex::new(r"(\d+):(\d+):({.*})").unwrap();
+    if let Some(captures) = re.captures(input) {
+        // id, size, data를 추출
+        let id: u32 = captures[1].parse().unwrap();
+        let size: u32 = captures[2].parse().unwrap();
+        let data = captures[3].to_owned(); // &str을 String으로 변환
+        Some((id, size, data))
+    } else {
+        None
+    }
 }
+
+
+
 
 // <ID>:<SIZE>:{[<TYPE>:<META_DATA>:<VALUE>][<TYPE>:<META_DATA>:<VALUE>][<TYPE>:<META_DATA>:<VALUE>]...}
 pub fn seirialize(mut msg : QMessage) -> String {

@@ -15,6 +15,9 @@ impl MessageBuilder for Person
 {
     fn unpack_message(self, buffer : String) -> Self {
 
+        // 1:46:{[3:4:John][1:0:14][2:0:172.3][4:3:=1=10,32,47]}
+        // message id => for RPC
+
         return Person::new_zero()   
     }
 
