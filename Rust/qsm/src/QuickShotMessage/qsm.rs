@@ -1,4 +1,4 @@
-use core::num::dec2flt::parse;
+// use core::num::dec2flt::parse;
 use std::collections::VecDeque;
 use std::string::ToString;
 use std::any::type_name;
@@ -40,36 +40,39 @@ impl<T: std::fmt::Display> QTuple<T> {
     }
 }
 
-pub fn deseirialize_qvalue(qType : QType, qArrElemType : QType, buffer : String) -> QTuple<T> {
-    match qType {
-        QType::DEFAULT => {return QTuple::new_zero()},
+pub fn deserialize_qvalue(q_type: QType, buffer: String) -> QTuple<T> {
+    match q_type {
+        QType::DEFAULT => QTuple::new_zero(),
         QType::QInt => {
-
-            let parsed_i64: Result<i64, _> = buffer.parse();
-            match parsed_i64 {
-                Ok(num) => return QTuple::new(num, 0.0, "".to_string(), Vec::new()),
-                Err(_) => println!("Convert Error ! !"),
-            };
-
+            match buffer.parse::<i64>() {
+                Ok(num) => QTuple::new(num, 0.0, "".to_string(), Vec::new()),
+                Err(_) => {
+                    println!("Convert Error!");
+                    QTuple::new_zero()
+                }
+            }
         },
         QType::QFloat => {
-
-            let parsed_f64: Result<f64, _> = buffer.parse();
-            match parsed_f64 {
-                Ok(num) => return QTuple::new(0, num, "".to_string(), Vec::new()),
-                Err(_) => println!("Convert Error ! !"),
-            };
-
+            match buffer.parse::<f64>() {
+                Ok(num) => QTuple::new(0, num, "".to_string(), Vec::new()),
+                Err(_) => {
+                    println!("Convert Error!");
+                    QTuple::new_zero()
+                }
+            }
         },
-        QType::QString => {
-            return QTuple::new(0, 0.0, buffer, Vec::new())
-        },
+        QType::QString => QTuple::new(0, 0.0, buffer, Vec::new()),
         QType::QArray => {
-            
+            // Handle QArray case
+            // You need to implement this part
+            unimplemented!()
         },
-        _ => return -1
-    };
-    return QTuple::new_zero();
+        _ => {
+            // Handle other cases
+            // You need to decide what to return here
+            QTuple::new_zero()
+        }
+    }
 }
 
 
