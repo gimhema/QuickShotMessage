@@ -40,40 +40,40 @@ impl<T: std::fmt::Display> QTuple<T> {
     }
 }
 
-pub fn deserialize_qvalue(q_type: QType, buffer: String) -> QTuple<T> {
-    match q_type {
-        QType::DEFAULT => QTuple::new_zero(),
-        QType::QInt => {
-            match buffer.parse::<i64>() {
-                Ok(num) => QTuple::new(num, 0.0, "".to_string(), Vec::new()),
-                Err(_) => {
-                    println!("Convert Error!");
-                    QTuple::new_zero()
-                }
-            }
-        },
-        QType::QFloat => {
-            match buffer.parse::<f64>() {
-                Ok(num) => QTuple::new(0, num, "".to_string(), Vec::new()),
-                Err(_) => {
-                    println!("Convert Error!");
-                    QTuple::new_zero()
-                }
-            }
-        },
-        QType::QString => QTuple::new(0, 0.0, buffer, Vec::new()),
-        QType::QArray => {
-            // Handle QArray case
-            // You need to implement this part
-            unimplemented!()
-        },
-        _ => {
-            // Handle other cases
-            // You need to decide what to return here
-            QTuple::new_zero()
-        }
-    }
-}
+// pub fn deserialize_qvalue(q_type: QType, buffer: String) -> QTuple<T> {
+//     match q_type {
+//         QType::DEFAULT => QTuple::new_zero(),
+//         QType::QInt => {
+//             match buffer.parse::<i64>() {
+//                 Ok(num) => QTuple::new(num, 0.0, "".to_string(), Vec::new()),
+//                 Err(_) => {
+//                     println!("Convert Error!");
+//                     QTuple::new_zero()
+//                 }
+//             }
+//         },
+//         QType::QFloat => {
+//             match buffer.parse::<f64>() {
+//                 Ok(num) => QTuple::new(0, num, "".to_string(), Vec::new()),
+//                 Err(_) => {
+//                     println!("Convert Error!");
+//                     QTuple::new_zero()
+//                 }
+//             }
+//         },
+//         QType::QString => QTuple::new(0, 0.0, buffer, Vec::new()),
+//         QType::QArray => {
+//             // Handle QArray case
+//             // You need to implement this part
+//             unimplemented!()
+//         },
+//         _ => {
+//             // Handle other cases
+//             // You need to decide what to return here
+//             QTuple::new_zero()
+//         }
+//     }
+// }
 
 
 
@@ -285,6 +285,7 @@ impl QMessage {
 pub trait MessageBuilder
 {
     fn message_build(self) -> QMessage;
+    fn unpack_message(self, buffer : String) -> Self;
 }
 
 pub fn deseirialize(buffer : String) -> QMessage {

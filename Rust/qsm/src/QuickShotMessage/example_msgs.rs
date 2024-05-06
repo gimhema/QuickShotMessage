@@ -13,6 +13,11 @@ pub struct Person
 
 impl MessageBuilder for Person
 {
+    fn unpack_message(self, buffer : String) -> Self {
+
+        return Person::new_zero()   
+    }
+
     fn message_build(mut self) -> QMessage {
         let mut _data = Vec::new();
         let mut _size = 0;
@@ -37,6 +42,13 @@ impl MessageBuilder for Person
 }
 
 impl Person {
+    pub fn new_zero() -> Self {
+        return Person{
+            id : 0, name : QString::new("".to_string()), age : QInteger::new(0),
+            height : QFloat::new(0.0), grade : QArray::new(Vec::new(), QType::DEFAULT)
+        }
+    }
+
     pub fn new(
         _id : i64,
         _name : QString,
@@ -59,6 +71,14 @@ pub struct Actor {
 }
 
 impl Actor {
+    pub fn new_zero() -> Self {
+        return Actor{
+            id: 0, loc_x: QFloat::new(0.0), loc_y: QFloat::new(0.0), 
+            loc_z: QFloat::new(0.0), rot_x: QFloat::new(0.0),
+            rot_y : QFloat::new(0.0), rot_z : QFloat::new(0.0),
+             rot_w : QFloat::new(0.0)
+        };
+    }
     pub fn new(
         _id : i64,
         _loc_x : QFloat,
@@ -75,6 +95,10 @@ impl Actor {
 
 impl MessageBuilder for Actor
 {
+    fn unpack_message(self, buffer : String) -> Self {
+        return Actor::new_zero()
+    }
+
     fn message_build(mut self) -> QMessage {
         let mut _data = Vec::new();
         let mut _size = 0;
