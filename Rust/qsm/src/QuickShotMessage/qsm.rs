@@ -308,6 +308,13 @@ pub fn deseirialize(input: &str) -> Option<(u32, u32, String)> {
     }
 }
 
+pub fn extract_data(input: &str) -> Vec<String> {
+    let re = Regex::new(r"\[[^\[\]]*\]").unwrap();
+    re.find_iter(input)
+        .map(|m| m.as_str().to_string())
+        .collect()
+}
+
 
 
 

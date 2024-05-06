@@ -211,10 +211,16 @@ QArray::new(vec![10, 32, 47], QType::QInt));
     let start = Instant::now();
 
 
+
     if let Some((id, size, data)) = deseirialize(s_message.as_str()) {
-        println!("id = {}", id);
-        println!("size = {}", size);
-        println!("data = {}", data);
+
+        let _data_vec = extract_data(data.as_str());
+        let mut q_message = QMessage::new(id as i64, size as usize, _data_vec);
+
+        println!("id = {}", q_message.get_id());
+        println!("size = {}", q_message.get_size());
+        println!("data = {:?}", q_message.get_data());
+
     } else {
         println!("Invalid input format");
     }
