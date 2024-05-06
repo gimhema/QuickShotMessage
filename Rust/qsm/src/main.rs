@@ -8,5 +8,7 @@ fn main() {
     
     TEST_Seriialize();
 
+    println!("==========================================");
+
     TEST_Deseriialize();
 }

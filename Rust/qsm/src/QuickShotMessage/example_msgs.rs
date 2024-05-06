@@ -198,5 +198,30 @@ QArray::new(vec![10, 32, 47], QType::QInt));
 pub fn TEST_Deseriialize()
 {
     // Message -> Struct
-    let msg = "";
+    let start = Instant::now();
+
+    let person = Person::new(1, QString::new("John".to_string()), QInteger::new(14), QFloat::new(172.3),
+QArray::new(vec![10, 32, 47], QType::QInt));
+
+    let mut person_message = person.message_build();
+
+    let mut s_message = seirialize(person_message);
+
+    println!("Previous Message : {}", s_message);
+    let start = Instant::now();
+
+
+    if let Some((id, size, data)) = deseirialize(s_message.as_str()) {
+        println!("id = {}", id);
+        println!("size = {}", size);
+        println!("data = {}", data);
+    } else {
+        println!("Invalid input format");
+    }
+
+    let end = Instant::now();
+    let elapsed_time = end - start;
+
+    println!("deseirialize: {:?}", elapsed_time);
+
 }

@@ -295,13 +295,13 @@ pub trait MessageBuilder
 
 
 pub fn deseirialize(input: &str) -> Option<(u32, u32, String)> {
-    // 정규 표현식을 사용하여 문자열을 분석
-    let re = Regex::new(r"(\d+):(\d+):({.*})").unwrap();
+
+    let re = Regex::new(r"(\d+):(\d+):(.*)").unwrap();
     if let Some(captures) = re.captures(input) {
-        // id, size, data를 추출
+
         let id: u32 = captures[1].parse().unwrap();
         let size: u32 = captures[2].parse().unwrap();
-        let data = captures[3].to_owned(); // &str을 String으로 변환
+        let data = captures[3].to_owned(); 
         Some((id, size, data))
     } else {
         None
