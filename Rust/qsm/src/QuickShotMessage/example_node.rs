@@ -4,6 +4,8 @@ use tokio::io::{AsyncReadExt, AsyncWriteExt};
 use tokio::sync::mpsc;
 use tokio::sync::mpsc::{Receiver, Sender};
 use tokio::select;
+use super::qsm::*;
+use super::example_msgs::*;
 
 async fn handle_client(mut socket: TcpStream, mut receiver: Receiver<String>, mut sender: Sender<String>) {
     let (mut reader, mut writer) = socket.split();
@@ -26,6 +28,7 @@ async fn handle_client(mut socket: TcpStream, mut receiver: Receiver<String>, mu
                 sender.send(msg.to_string()).await.expect("Failed to send message");
             }
             Some(msg) = receiver.recv() => {
+                println!("Received: {}", msg);
                 writer.write_all(msg.as_bytes()).await.expect("Failed to write to socket");
             }
         }
@@ -68,7 +71,19 @@ pub async fn run_client() {
             println!("Exiting...");
             return;
         }
+        else if input.trim() == "qTest" {
+            let person = Person::new(1, QString::new("John".to_string()), QInteger::new(14), QFloat::new(172.3),
+            QArray::new(vec![10, 32, 47], QType::QInt));
 
-        writer.write_all(input.as_bytes()).await.expect("Failed to write to server");
+            let mut person_message = person.message_build();
+            let mut s_message = seirialize(person_message);
+            writer.write_all(s_message.as_bytes()).await.expect("Failed to write to server");
+        }
+        else
+        {
+            writer.write_all(input.as_bytes()).await.expect("Failed to write to server");
+        }
+
+
     }
 }

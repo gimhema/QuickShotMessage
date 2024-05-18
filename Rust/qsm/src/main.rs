@@ -1,3 +1,6 @@
+// cargo run -- -c Execute Server
+// cargo run -- -s Execute Client
+
 mod QuickShotMessage;
 
 use QuickShotMessage::{*, example_msgs::TEST_Deseriialize};
