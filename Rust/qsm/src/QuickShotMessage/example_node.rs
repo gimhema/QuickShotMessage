@@ -29,6 +29,20 @@ async fn handle_client(mut socket: TcpStream, mut receiver: Receiver<String>, mu
             }
             Some(msg) = receiver.recv() => {
                 println!("Received: {}", msg);
+
+                if let Some((id, size, data)) = deseirialize(msg.as_str()) {
+
+                    let _data_vec = extract_data(data.as_str());
+                    let mut q_message = QMessage::new(id as i64, size as usize, _data_vec);
+            
+                    println!("id = {}", q_message.get_id());
+                    println!("size = {}", q_message.get_size());
+                    println!("data = {:?}", q_message.get_data());
+            
+                } else {
+                    println!("Invalid input format");
+                }
+
                 writer.write_all(msg.as_bytes()).await.expect("Failed to write to socket");
             }
         }
