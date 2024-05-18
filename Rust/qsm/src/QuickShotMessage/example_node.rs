@@ -6,6 +6,7 @@ use tokio::sync::mpsc::{Receiver, Sender};
 use tokio::select;
 use super::qsm::*;
 use super::example_msgs::*;
+use std::time::{Instant};
 
 async fn handle_client(mut socket: TcpStream, mut receiver: Receiver<String>, mut sender: Sender<String>) {
     let (mut reader, mut writer) = socket.split();
@@ -31,6 +32,8 @@ async fn handle_client(mut socket: TcpStream, mut receiver: Receiver<String>, mu
                 println!("Received: {}", msg);
 
                 if let Some((id, size, data)) = deseirialize(msg.as_str()) {
+                    
+                    let start = Instant::now();
 
                     let _data_vec = extract_data(data.as_str());
                     let mut q_message = QMessage::new(id as i64, size as usize, _data_vec);
@@ -39,6 +42,10 @@ async fn handle_client(mut socket: TcpStream, mut receiver: Receiver<String>, mu
                     println!("size = {}", q_message.get_size());
                     println!("data = {:?}", q_message.get_data());
             
+                    let end = Instant::now();
+                    let elapsed_time = end - start;
+                    println!("actor serialized time out: {:?}", elapsed_time);
+                
                 } else {
                     println!("Invalid input format");
                 }
