@@ -91,4 +91,26 @@ QArray::new(vec![10, 32, 47], QType::QInt));
 
 ```
 
+pub fn TEST_Deseriialize()
+{
+    // Message -> Struct
+    let person = Person::new(1, QString::new("John".to_string()), QInteger::new(14), QFloat::new(172.3),
+QArray::new(vec![10, 32, 47], QType::QInt));
+    let mut person_message = person.message_build();
+    let mut s_message = seirialize(person_message);
+
+
+    if let Some((id, size, data)) = deseirialize(s_message.as_str()) {
+        let _data_vec = extract_data(data.as_str());
+        let mut q_message = QMessage::new(id as i64, size as usize, _data_vec);
+
+        println!("id = {}", q_message.get_id());
+        println!("size = {}", q_message.get_size());
+        println!("data = {:?}", q_message.get_data());
+
+    } else {
+        println!("Invalid input format");
+    }
+}
+
 ```
