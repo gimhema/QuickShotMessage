@@ -114,3 +114,16 @@ QArray::new(vec![10, 32, 47], QType::QInt));
 }
 
 ```
+
+
+### C++
+
+#### Serialize
+```
+
+```
+
+#### DeSerialize
+```
+
+```
