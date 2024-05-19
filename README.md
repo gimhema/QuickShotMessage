@@ -162,3 +162,25 @@ QArray::new(vec![10, 32, 47], QType::QInt));
     std::cout << "Size: " << size << "\n";
     std::cout << "Data: " << ds_data << "\n";
 ```
+
+### Python
+
+#### Serialize
+```
+
+```
+#### Deserialize
+```
+
+```
+
+### Go
+
+#### Serialize
+```
+
+```
+#### Deserialize
+```
+
+```
