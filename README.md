@@ -146,7 +146,7 @@ QArray::new(vec![10, 32, 47], QType::QInt));
     std::cout << "Execution time: " << duration.count() << " seconds" << std::endl;
 ```
 
-#### DeSerialize
+#### Deserialize
 ```
     auto ds_start = std::chrono::high_resolution_clock::now();
 
