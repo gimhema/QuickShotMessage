@@ -155,7 +155,7 @@ QArray::new(vec![10, 32, 47], QType::QInt));
 
     auto ds_end = std::chrono::high_resolution_clock::now();
 
-    std::chrono::duration<double> ds_duration = ds_start - ds_end;
+    std::chrono::duration<double> ds_duration = ds_end - ds_start;
     std::cout << "Execution time: " << ds_duration.count() << " seconds" << std::endl;
 
     std::cout << "ID: " << id << "\n";
