@@ -1,4 +1,5 @@
 #include <iostream>
+#include "QuickShotMessage/qsm.hpp"
 
 int main()
 {
