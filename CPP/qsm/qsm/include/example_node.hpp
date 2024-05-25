@@ -146,8 +146,36 @@ void run_client(const char* server_address, const char* port) {
             std::cout << "Exiting...\n";
             break;
         }
+        else if (input == "qTest") {
+            /*
+            let person = Person::new(1, QString::new("John".to_string()), QInteger::new(14), QFloat::new(172.3),
+            QArray::new(vec![10, 32, 47], QType::QInt));
 
-        send(connect_socket, input.c_str(), input.length(), 0);
+            let mut person_message = person.message_build();
+            let mut s_message = seirialize(person_message);
+            writer.write_all(s_message.as_bytes()).await.expect("Failed to write to server");
+            */
+            QInteger id(42);
+            QString name("JohnCpp");
+            QInteger age(17);
+            QFloat height(175.6);
+            std::vector<int> gradeVec = { 1, 2, 3, 4, 5 };
+            QArray<int> grade(gradeVec, QType::QInt);
+
+            std::vector<std::string> data = { 
+                id.get_buffer(),
+                name.get_buffer(),
+                age.get_buffer(),
+                height.get_buffer(),
+                grade.get_buffer() };
+            QMessage qMessage(42, data.size(), data);
+            std::string send_msg = serialize(qMessage);
+            send(connect_socket, send_msg.c_str(), send_msg.length(), 0);
+        }
+        else
+        {
+            send(connect_socket, input.c_str(), input.length(), 0);
+        }
 
         int result = recv(connect_socket, buffer, 1024, 0);
         if (result > 0) {
@@ -169,10 +197,5 @@ void run_client(const char* server_address, const char* port) {
 
 // int main() {
 //     run_server("8080");
-//     return 0;
-// }
-
-// int main() {
-//     run_client("127.0.0.1", "8080");
 //     return 0;
 // }
