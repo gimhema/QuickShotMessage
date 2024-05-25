@@ -140,3 +140,13 @@ void run_client(const char* server_address, const char* port) {
 
     close(connect_socket);
 }
+
+// int main() {
+//     run_server("8080");
+//     return 0;
+// }
+
+// int main() {
+//     run_client("127.0.0.1", "8080");
+//     return 0;
+// }
