@@ -1,6 +1,7 @@
 #include <iostream>
 #include <chrono>
 #include "QuickShotMessage/qsm.hpp"
+#include "QuickShotMessage/example_node.hpp"
 
 int main() {
     // Example usage
