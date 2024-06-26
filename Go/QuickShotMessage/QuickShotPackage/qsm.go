@@ -258,6 +258,39 @@ func serialize(msg *QMessage) string {
 
 // TEST
 
+func TEST() {
+	// deserialize 함수 테스트
+	input1 := "123:456:Hello"
+	id, size, data := deserialize(input1)
+	fmt.Printf("deserialize(%q) = (%d, %d, %q)\n", input1, id, size, data)
+
+	// extractData 함수 테스트
+	input2 := "[123:456:Hello][789:101112:World]"
+	extractedData := extractData(input2)
+	fmt.Printf("extractData(%q) = %v\n", input2, extractedData)
+
+	// serialize 함수 테스트
+	msg := NewQMessage(123, 2, []string{"[1:2:Data1]", "[3:4:Data2]"})
+	serializedData := serialize(msg)
+	fmt.Printf("serialize(%v) = %q\n", msg, serializedData)
+
+	// Additional checks for correctness
+	expectedExtracted := []string{"[123:456:Hello]", "[789:101112:World]"}
+	expectedSerialized := "123:2:{[1:2:Data1][3:4:Data2]}"
+
+	if !reflect.DeepEqual(extractedData, expectedExtracted) {
+		fmt.Println("extractData test failed")
+	} else {
+		fmt.Println("extractData test passed")
+	}
+
+	if serializedData != expectedSerialized {
+		fmt.Println("serialize test failed")
+	} else {
+		fmt.Println("serialize test passed")
+	}
+}
+
 func TestDeserialize(t *testing.T) {
 	tests := []struct {
 		input    string
