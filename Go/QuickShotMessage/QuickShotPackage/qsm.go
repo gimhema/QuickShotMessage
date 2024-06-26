@@ -2,9 +2,11 @@ package quickshotmessage
 
 import (
 	"fmt"
+	"reflect"
 	"regexp"
 	"strconv"
 	"strings"
+	"testing"
 )
 
 // QType Enum
@@ -252,4 +254,80 @@ func serialize(msg *QMessage) string {
 	}
 	serialized.WriteString("}")
 	return serialized.String()
+}
+
+// TEST
+
+func TestDeserialize(t *testing.T) {
+	tests := []struct {
+		input    string
+		expected struct {
+			id   uint32
+			size uint32
+			data string
+		}
+	}{
+		{"123:456:Hello", struct {
+			id   uint32
+			size uint32
+			data string
+		}{123, 456, "Hello"}},
+		{"789:101112:World", struct {
+			id   uint32
+			size uint32
+			data string
+		}{789, 101112, "World"}},
+		{"", struct {
+			id   uint32
+			size uint32
+			data string
+		}{0, 0, ""}},
+	}
+
+	for _, tt := range tests {
+		id, size, data := deserialize(tt.input)
+		if id != tt.expected.id || size != tt.expected.size || data != tt.expected.data {
+			t.Errorf("deserialize(%q) = (%d, %d, %q); expected (%d, %d, %q)",
+				tt.input, id, size, data, tt.expected.id, tt.expected.size, tt.expected.data)
+		}
+	}
+}
+
+func TestExtractData(t *testing.T) {
+	tests := []struct {
+		input    string
+		expected []string
+	}{
+		{"[123:456:Hello][789:101112:World]", []string{"[123:456:Hello]", "[789:101112:World]"}},
+		{"[1:2:Data][3:4:MoreData]", []string{"[1:2:Data]", "[3:4:MoreData]"}},
+		{"[5:6:Single]", []string{"[5:6:Single]"}},
+		{"", []string{}},
+	}
+
+	for _, tt := range tests {
+		result := extractData(tt.input)
+		if !reflect.DeepEqual(result, tt.expected) {
+			t.Errorf("extractData(%q) = %v; expected %v",
+				tt.input, result, tt.expected)
+		}
+	}
+}
+
+func TestSerialize(t *testing.T) {
+	tests := []struct {
+		msg      *QMessage
+		expected string
+	}{
+		{NewQMessage(123, 2, []string{"[1:2:Data1]", "[3:4:Data2]"}), "123:2:{[1:2:Data1][3:4:Data2]}"},
+		{NewQMessage(456, 1, []string{"[5:6:Data3]"}), "456:1:{[5:6:Data3]}"},
+		{NewQMessage(789, 0, []string{}), "789:0:{}"},
+	}
+
+	for _, tt := range tests {
+		result := serialize(tt.msg)
+		if result != tt.expected {
+			t.Errorf("serialize(%v) = %q; expected %q",
+				tt.msg, result, tt.expected)
+		}
+	}
 }
