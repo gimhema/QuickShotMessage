@@ -165,13 +165,26 @@ QArray::new(vec![10, 32, 47], QType::QInt));
 
 ### Go
 
-#### Serialize
+#### Serialize / Deserialize
 ```
+func TEST() {
 
-```
-#### Deserialize
-```
+	input1 := "123:456:Hello"
+	id, size, data := deserialize(input1)
+	fmt.Printf("deserialize(%q) = (%d, %d, %q)\n", input1, id, size, data)
 
+	input2 := "[123:456:Hello][789:101112:World]"
+	extractedData := extractData(input2)
+	fmt.Printf("extractData(%q) = %v\n", input2, extractedData)
+
+	msg := NewQMessage(123, 2, []string{"[1:2:Data1]", "[3:4:Data2]"})
+	serializedData := serialize(msg)
+	fmt.Printf("serialize(%v) = %q\n", msg, serializedData)
+
+	expectedExtracted := []string{"[123:456:Hello]", "[789:101112:World]"}
+	expectedSerialized := "123:2:{[1:2:Data1][3:4:Data2]}"
+
+}
 ```
 
 
