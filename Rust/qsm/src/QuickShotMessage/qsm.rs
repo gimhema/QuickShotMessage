@@ -337,20 +337,24 @@ pub fn extract_data(input: &str) -> Vec<String> {
 
 
 // <ID>:<SIZE>:{[<TYPE>:<META_DATA>:<VALUE>][<TYPE>:<META_DATA>:<VALUE>][<TYPE>:<META_DATA>:<VALUE>]...}
-pub fn seirialize(mut msg : QMessage) -> String {
-    // id + data . . .
-    
-    let mut serialized = msg.get_id().to_string() + ":"
-     + &msg.get_size().to_string() + ":" + "{";
+pub fn serialize(msg: QMessage) -> String {
+    let mut serialized = String::with_capacity(
+        msg.get_id().to_string().len() + 1 + 
+        msg.get_size().to_string().len() + 1 + 
+        1 + msg.get_data().iter().map(|s| s.len()).sum::<usize>() + 1
+    );
 
-     for elem in &msg.data {
-        serialized += elem;
-        
+    serialized.push_str(&msg.get_id().to_string());
+    serialized.push(':');
+    serialized.push_str(&msg.get_size().to_string());
+    serialized.push(':');
+    serialized.push('{');
+
+    for elem in &msg.data {
+        serialized.push_str(elem);
     } 
 
-    serialized += "}";
-
-
-    return serialized
+    serialized.push('}');
+    serialized
 }
 
