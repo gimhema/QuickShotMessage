@@ -295,14 +295,18 @@ pub trait MessageBuilder
 
 
 pub fn deserialize(input: &str) -> Option<(u32, u32, String)> {
-    let re = Regex::new(r"(\d+):(\d+):(.*)").unwrap();
-    re.captures(input).and_then(|captures| {
-        let id: u32 = captures[1].parse().ok()?;
-        let size: u32 = captures[2].parse().ok()?;
-        let data = captures[3].to_owned(); 
-        Some((id, size, data))
-    })
+    let mut parts = input.splitn(3, ':');
+
+    let id_str = parts.next()?;
+    let size_str = parts.next()?;
+    let data = parts.next()?.to_string();
+
+    let id = id_str.parse().ok()?;
+    let size = size_str.parse().ok()?;
+
+    Some((id, size, data))
 }
+
 
 pub fn extract_data(input: &str) -> Vec<String> {
     let mut result = Vec::new();
