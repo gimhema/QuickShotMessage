@@ -309,11 +309,29 @@ pub fn deseirialize(input: &str) -> Option<(u32, u32, String)> {
 }
 
 pub fn extract_data(input: &str) -> Vec<String> {
-    let re = Regex::new(r"\[[^\[\]]*\]").unwrap();
-    re.find_iter(input)
-        .map(|m| m.as_str().to_string())
-        .collect()
+    let mut result = Vec::new();
+    let mut start = 0;
+    let mut depth = 0;
+    for (i, c) in input.char_indices() {
+        match c {
+            '[' => {
+                if depth == 0 {
+                    start = i;
+                }
+                depth += 1;
+            }
+            ']' => {
+                depth -= 1;
+                if depth == 0 {
+                    result.push(input[start..=i].to_string());
+                }
+            }
+            _ => {}
+        }
+    }
+    result
 }
+
 
 
 
