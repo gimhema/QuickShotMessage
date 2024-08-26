@@ -192,26 +192,29 @@ public:
 };
 
 std::tuple<uint32_t, uint32_t, std::string> deserialize(const std::string& input) {
-    std::regex re(R"((\d+):(\d+):(.*))");
-    std::smatch matches;
-    if (std::regex_search(input, matches, re) && matches.size() > 3) {
-        uint32_t id = std::stoi(matches[1].str());
-        uint32_t size = std::stoi(matches[2].str());
-        std::string data = matches[3].str();
-        return std::make_tuple(id, size, data);
-    }
-    else {
+    size_t first_colon = input.find(':');
+    size_t second_colon = input.find(':', first_colon + 1);
+
+    if (first_colon == std::string::npos || second_colon == std::string::npos) {
         return std::make_tuple(0, 0, "");
     }
+
+    uint32_t id = std::stoul(input.substr(0, first_colon));
+    uint32_t size = std::stoul(input.substr(first_colon + 1, second_colon - first_colon - 1));
+    std::string data = input.substr(second_colon + 1);
+
+    return std::make_tuple(id, size, data);
 }
 
+
 std::vector<std::string> extract_data(const std::string& input) {
-    std::regex re(R"(\[[^\[\]]*\])");
-    std::sregex_iterator begin(input.begin(), input.end(), re);
-    std::sregex_iterator end;
     std::vector<std::string> result;
-    for (std::sregex_iterator i = begin; i != end; ++i) {
-        result.push_back((*i).str());
+    size_t start = 0;
+    while ((start = input.find('[', start)) != std::string::npos) {
+        size_t end = input.find(']', start);
+        if (end == std::string::npos) break;
+        result.push_back(input.substr(start, end - start + 1));
+        start = end + 1;
     }
     return result;
 }
