@@ -37,7 +37,8 @@ fn main() -> std::io::Result<()>  {
     for stream in listener.incoming() {
         let mut stream = stream?;
         // let mut buffer = vec![0; std::mem::size_of::<PackedData>()]; // PackedData 크기 만큼의 버퍼 생성
-        let mut buffer = vec![0; std::mem::size_of::<ExampleMessage>()]; // PackedData 크기 만큼의 버퍼 생성
+        // let mut buffer = vec![0; std::mem::size_of::<ExampleMessage>()]; // PackedData 크기 만큼의 버퍼 생성
+        let mut buffer = vec![0; 2048];
 
         // 데이터가 충분히 수신될 때까지 읽기
         let mut total_read = 0;
