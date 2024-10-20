@@ -1,5 +1,6 @@
 use std::io::{self, Cursor, Read, Write};
 
+
 pub fn handle_message(buffer: &[u8]) {
     // BaseMessage의 ID 확인
     let base_message = BaseMessage::deserialize(buffer).unwrap();
@@ -16,6 +17,11 @@ pub fn handle_message(buffer: &[u8]) {
             println!("Check Packed Message");
             let packed_data = PackedData::deserialize(buffer).unwrap();
             println!("PackedData received: {:?}", packed_data);
+        }
+        2 => {
+            println!("Check ExampleMessage");
+            let example_message = ExampleMessage::deserialize(buffer).unwrap();
+            println!("ExampleMessage received: {:?}", example_message);
         }
         _ => {
             println!("Unknown message id: {}", base_message_id);
@@ -42,18 +48,6 @@ impl BaseMessage {
         buffer
     }
 
-    // 바이너리 데이터를 역직렬화하여 BaseMessage 생성
-    // pub fn deserialize(buffer: &[u8]) -> io::Result<Self> {
-    //     if buffer.len() < 4 {
-    //         return Err(io::Error::new(io::ErrorKind::InvalidData, "Buffer too short"));
-    //     }
-
-    //     let mut id_bytes = [0u8; 4];
-    //     id_bytes.copy_from_slice(&buffer[0..4]);
-
-    //     let id = u32::from_le_bytes(id_bytes);
-    //     Ok(BaseMessage { id })
-    // }
     pub fn deserialize(buffer: &[u8]) -> Result<Self, &'static str> {
         if buffer.len() < 4 {
             return Err("Buffer too short");
@@ -89,27 +83,6 @@ impl PackedData {
         buffer
     }
 
-    // 바이너리 역직렬화
-    // pub fn deserialize(buffer: &[u8]) -> io::Result<Self> {
-    //     let mut cursor = Cursor::new(buffer);
-    //     let mut id_bytes = [0u8; 4];
-    //     let mut size_bytes = [0u8; 4];
-    //     let mut value_bytes = [0u8; 8];
-
-    //     cursor.read_exact(&mut id_bytes)?;
-    //     cursor.read_exact(&mut size_bytes)?;
-    //     cursor.read_exact(&mut value_bytes)?;
-
-    //     let id = u32::from_le_bytes(id_bytes);
-    //     let size = u32::from_le_bytes(size_bytes);
-    //     let value = u64::from_le_bytes(value_bytes);
-
-    //     if size != buffer.len() as u32 {
-    //         return Err(io::Error::new(io::ErrorKind::InvalidData, "Size mismatch"));
-    //     }
-
-    //     Ok(PackedData { id, size, value })
-    // }
 
     pub fn deserialize(buffer: &[u8]) -> std::io::Result<Self> {
         if buffer.len() < std::mem::size_of::<PackedData>() {
@@ -123,4 +96,97 @@ impl PackedData {
         Ok(PackedData { id, size, value })
     }
 
+}
+
+// ExampleMessage 구조체 정의 (문자열 및 정수 배열 포함)
+#[repr(C)]  // 안전한 메모리 레이아웃 보장
+#[derive(Debug, Clone)]
+pub struct ExampleMessage {
+    id: u32,            // 메시지 타입
+    string_length: u32,  // 문자열 길이
+    array_length: u32,   // 배열 길이
+    text: String,        // 문자열
+    numbers: Vec<i32>,   // 정수 배열
+}
+
+impl ExampleMessage {
+    pub fn new(id: u32, text: String, numbers: Vec<i32>) -> Self {
+        Self {
+            id,
+            string_length: text.len() as u32,
+            array_length: numbers.len() as u32,
+            text,
+            numbers,
+        }
+    }
+
+    // 직렬화
+    pub fn serialize(&self) -> Vec<u8> {
+        let mut buffer = Vec::new();
+
+        // id 직렬화 (u32)
+        buffer.extend(&self.id.to_le_bytes());
+
+        // string_length 직렬화 (u32)
+        buffer.extend(&self.string_length.to_le_bytes());
+
+        // 문자열 직렬화
+        buffer.extend(self.text.as_bytes());
+
+        // array_length 직렬화 (u32)
+        buffer.extend(&self.array_length.to_le_bytes());
+
+        // 정수 배열 직렬화 (i32 배열)
+        for num in &self.numbers {
+            buffer.extend(&num.to_le_bytes());
+        }
+
+        buffer
+    }
+
+    // 역직렬화
+    pub fn deserialize(buffer: &[u8]) -> io::Result<Self> {
+        let mut offset = 0;
+
+        // id 역직렬화
+        let mut id_bytes = [0u8; 4];
+        id_bytes.copy_from_slice(&buffer[offset..offset + 4]);
+        let id = u32::from_le_bytes(id_bytes);
+        offset += 4;
+
+        // string_length 역직렬화
+        let mut string_length_bytes = [0u8; 4];
+        string_length_bytes.copy_from_slice(&buffer[offset..offset + 4]);
+        let string_length = u32::from_le_bytes(string_length_bytes);
+        offset += 4;
+
+        // 문자열 역직렬화
+        let text = String::from_utf8(buffer[offset..offset + string_length as usize].to_vec())
+            .map_err(|_| io::Error::new(io::ErrorKind::InvalidData, "Invalid UTF-8 string"))?;
+        offset += string_length as usize;
+
+        // array_length 역직렬화
+        let mut array_length_bytes = [0u8; 4];
+        array_length_bytes.copy_from_slice(&buffer[offset..offset + 4]);
+        let array_length = u32::from_le_bytes(array_length_bytes);
+        offset += 4;
+
+        // 배열 역직렬화
+        let mut numbers = Vec::new();
+        for _ in 0..array_length {
+            let mut num_bytes = [0u8; 4];
+            num_bytes.copy_from_slice(&buffer[offset..offset + 4]);
+            let num = i32::from_le_bytes(num_bytes);
+            numbers.push(num);
+            offset += 4;
+        }
+
+        Ok(ExampleMessage {
+            id,
+            string_length,
+            array_length,
+            text,
+            numbers,
+        })
+    }
 }
