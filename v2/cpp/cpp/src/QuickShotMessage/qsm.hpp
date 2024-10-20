@@ -1,3 +1,5 @@
+// g++ -o qsm src/main.cpp
+
 #include <iostream>
 #include <vector>
 #include <cstring>  // memcpy
@@ -79,6 +81,91 @@ struct PackedData {
         return os;
     }
 };
+
+
+struct ExampleMessage {
+    uint32_t id;            // 메시지 타입
+    uint32_t string_length;  // 문자열 길이
+    uint32_t array_length;   // 배열 길이
+    std::string text;        // 문자열
+    std::vector<int32_t> numbers; // 정수 배열
+
+    ExampleMessage(uint32_t id, const std::string& text, const std::vector<int32_t>& numbers) 
+        : id(id), string_length(text.size()), array_length(numbers.size()), text(text), numbers(numbers) {}
+
+    // 직렬화 함수
+    std::vector<uint8_t> serialize() const {
+        std::vector<uint8_t> buffer(sizeof(id) + sizeof(string_length) + string_length + sizeof(array_length) + array_length * sizeof(int32_t));
+
+        size_t offset = 0;
+
+        // id 복사
+        std::memcpy(buffer.data() + offset, &id, sizeof(id));
+        offset += sizeof(id);
+
+        // 문자열 길이 복사
+        std::memcpy(buffer.data() + offset, &string_length, sizeof(string_length));
+        offset += sizeof(string_length);
+
+        // 문자열 복사
+        std::memcpy(buffer.data() + offset, text.c_str(), string_length);
+        offset += string_length;
+
+        // 배열 길이 복사
+        std::memcpy(buffer.data() + offset, &array_length, sizeof(array_length));
+        offset += sizeof(array_length);
+
+        // 배열 값 복사
+        std::memcpy(buffer.data() + offset, numbers.data(), array_length * sizeof(int32_t));
+
+        return buffer;
+    }
+
+    // 역직렬화 함수
+    static ExampleMessage deserialize(const std::vector<uint8_t>& buffer) {
+        size_t offset = 0;
+
+        // id 복사
+        uint32_t id;
+        std::memcpy(&id, buffer.data() + offset, sizeof(id));
+        offset += sizeof(id);
+
+        // 문자열 길이 복사
+        uint32_t string_length;
+        std::memcpy(&string_length, buffer.data() + offset, sizeof(string_length));
+        offset += sizeof(string_length);
+
+        // 문자열 복사
+        std::string text(buffer.begin() + offset, buffer.begin() + offset + string_length);
+        offset += string_length;
+
+        // 배열 길이 복사
+        uint32_t array_length;
+        std::memcpy(&array_length, buffer.data() + offset, sizeof(array_length));
+        offset += sizeof(array_length);
+
+        // 배열 값 복사
+        std::vector<int32_t> numbers(array_length);
+        std::memcpy(numbers.data(), buffer.data() + offset, array_length * sizeof(int32_t));
+
+        return ExampleMessage(id, text, numbers);
+    }
+
+    // ExampleMessage 출력
+    friend std::ostream& operator<<(std::ostream& os, const ExampleMessage& msg) {
+        os << "ExampleMessage { id: " << msg.id
+           << ", text: " << msg.text
+           << ", numbers: [";
+        for (size_t i = 0; i < msg.numbers.size(); ++i) {
+            os << msg.numbers[i];
+            if (i < msg.numbers.size() - 1) os << ", ";
+        }
+        os << "] }";
+        return os;
+    }
+};
+
+
 #pragma pack(pop)
 
 // 메시지 처리 함수
