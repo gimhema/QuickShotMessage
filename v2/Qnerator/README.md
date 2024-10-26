@@ -1,7 +1,6 @@
 # Overview
 
-QuichShotMessage generator
-
+QuickShotMessage generator
 
 ## Detail
 
@@ -41,6 +40,20 @@ QS_ExampleMessage.hpp
 QS_ExampleMessage.rs
 ```
 ```
+
+
+## Command Usage
+
+- qnerator <FILE_NAME> <LANGUAGE> <GENERATE_DIRECTORY> : Generate quickshot message file as selected language and move file in the <GENERATE_DIRECTORY>
+
+
+### Example
+```
+console input : qnerator ExampleMEssage.qsmb cpp Example
+console output : will generate QS_ExampleMessage.hpp in Example directory
+```
+
+- qnerator <DIRECTORY> <LANGUAGE> <GENERATE_DIRECTORY> : Search all qsmb file in the <DIRECTORY> and generate quickshot message file as selected language and move files in the <GENERATE_DIRECTORY>
 
 
 
