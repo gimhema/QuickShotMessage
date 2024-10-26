@@ -45,11 +45,14 @@ struct PackedData {
     uint64_t value; // 8 bytes
 
     PackedData(uint32_t id, uint64_t value) 
-        : id(id), size(sizeof(PackedData)), value(value) {}
+        : id(id), value(value) {
+        size = sizeof(id) + sizeof(size) + sizeof(value); // 동적으로 size 설정
+    }
 
     // PackedData 직렬화
-    std::vector<uint8_t> serialize() const {
-        std::vector<uint8_t> buffer(size);
+    std::vector<uint8_t> serialize() {
+        size = sizeof(id) + sizeof(size) + sizeof(value); // 직렬화 전에 size 갱신
+        std::vector<uint8_t> buffer(size); // 버퍼 크기를 size로 설정
         std::memcpy(buffer.data(), &id, sizeof(id));
         std::memcpy(buffer.data() + sizeof(id), &size, sizeof(size));
         std::memcpy(buffer.data() + sizeof(id) + sizeof(size), &value, sizeof(value));
@@ -67,9 +70,9 @@ struct PackedData {
         std::memcpy(&size, buffer.data() + sizeof(id), sizeof(size));
         std::memcpy(&value, buffer.data() + sizeof(id) + sizeof(size), sizeof(value));
 
-        if (size != buffer.size()) {
-            throw std::runtime_error("Size mismatch");
-        }
+        // if (size != buffer.size()) {
+        //     throw std::runtime_error("Size mismatch");
+        // }
         return PackedData(id, value);
     }
 
@@ -81,6 +84,8 @@ struct PackedData {
         return os;
     }
 };
+#pragma pack(pop)
+
 
 
 struct ExampleMessage {
@@ -181,6 +186,7 @@ void handle_message(const std::vector<uint8_t>& buffer) {
         }
         case 1: {
             // id가 1이면 PackedData의 값을 출력
+            std::cout << "Case 1 " << std::endl;
             PackedData packed_data = PackedData::deserialize(buffer);
             std::cout << packed_data << std::endl;
             break;
