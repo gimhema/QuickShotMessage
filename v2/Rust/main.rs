@@ -5,42 +5,15 @@ use qsm2::qsm::*;
 use std::io::{Read, Write};
 use std::net::TcpListener;
 
-fn main() -> std::io::Result<()>  {
-    // 새로운 PackedData 인스턴스 생성
-    // let data = PackedData::new(1, 123456789);
-    
-    // // 바이너리 직렬화
-    // let serialized = data.serialize();
-    // println!("Serialized data: {:?}", serialized);
-
-    // // 바이너리 역직렬화
-    // match PackedData::deserialize(&serialized) {
-    //     Ok(deserialized_data) => {
-    //         println!("Deserialized data: {:?}", deserialized_data);
-    //     }
-    //     Err(e) => {
-    //         println!("Error during deserialization: {}", e);
-    //     }
-    // }
-
-    // let invalid_message = BaseMessage::new(0).serialize();
-    // handle_message(&invalid_message);
-
-    // // id가 1인 PackedData 메시지 생성
-    // let packed_data = PackedData::new(1, 123456789);
-    // let packed_data_serialized = packed_data.serialize();
-    // handle_message(&packed_data_serialized);
-
+fn main() -> std::io::Result<()> {
     let listener = TcpListener::bind("127.0.0.1:8080")?;
     println!("Server listening on port 8080");
 
     for stream in listener.incoming() {
         let mut stream = stream?;
-        // let mut buffer = vec![0; std::mem::size_of::<PackedData>()]; // PackedData 크기 만큼의 버퍼 생성
-        // let mut buffer = vec![0; std::mem::size_of::<ExampleMessage>()]; // PackedData 크기 만큼의 버퍼 생성
-        let mut buffer = vec![0; 2048];
+        let mut buffer = vec![0; 2048]; // 충분한 크기의 버퍼 생성
 
-        // 데이터가 충분히 수신될 때까지 읽기
+        // 데이터 수신
         let mut total_read = 0;
         while total_read < buffer.len() {
             let bytes_read = stream.read(&mut buffer[total_read..])?;
@@ -51,9 +24,16 @@ fn main() -> std::io::Result<()>  {
             total_read += bytes_read;
         }
 
+        // 받은 메시지를 처리
         handle_message(&buffer);
+
+        // 수신한 메시지를 그대로 클라이언트로 다시 전송 (Echo)
+        if let Err(e) = stream.write_all(&buffer) {
+            eprintln!("Failed to send echo message: {}", e);
+        } else {
+            println!("Echoed message back to client.");
+        }
     }
 
     Ok(())
-
 }
