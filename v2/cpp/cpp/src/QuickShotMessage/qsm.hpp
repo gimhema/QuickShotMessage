@@ -191,6 +191,12 @@ void handle_message(const std::vector<uint8_t>& buffer) {
             std::cout << packed_data << std::endl;
             break;
         }
+        case 2: {
+            std::cout << "Case 2 " << std::endl;
+            ExampleMessage example_data = ExampleMessage::deserialize(buffer);
+            std::cout << example_data << std::endl;
+            break;
+        }
         default: {
             std::cout << "Unknown message id: " << base_message.id << "\n";
             break;
