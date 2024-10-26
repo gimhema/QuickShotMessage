@@ -1,24 +1,14 @@
-#include"QuickShotMessage/qsm.hpp"
+#include "QuickShotMessage/qsm.hpp"
 #include <sys/socket.h>
 #include <arpa/inet.h>
 #include <unistd.h>
+#include <vector>
+#include <iostream>
 
 int main() {
-    // // id가 0인 메시지 생성
-    // BaseMessage invalid_message(0);
-    // std::vector<uint8_t> invalid_message_serialized = invalid_message.serialize();
-    // handle_message(invalid_message_serialized);
-
-    // // id가 1인 PackedData 메시지 생성
-    // PackedData packed_data(1, 123456789);
-    // std::vector<uint8_t> packed_data_serialized = packed_data.serialize();
-    // handle_message(packed_data_serialized);
-
-    // return 0;
-
     int sock = 0;
     struct sockaddr_in serv_addr;
-    
+
     // 소켓 생성
     if ((sock = socket(AF_INET, SOCK_STREAM, 0)) < 0) {
         std::cerr << "Socket creation error" << std::endl;
@@ -40,19 +30,30 @@ int main() {
         return -1;
     }
 
-// PackedData 메시지 생성 (id = 1, value = 123456789)
-    // PackedData packed_data(1, 123456789);
-    ExampleMessage packed_data(2, "Hello Message", {5, 7, 9, 47});
+    // 서버로 PackedData 메시지 전송
+    {
+        PackedData packed_data(1, 123456789);
+        std::vector<uint8_t> serialized_data = packed_data.serialize();
+        send(sock, serialized_data.data(), serialized_data.size(), 0);
+        std::cout << "PackedData message sent to server" << std::endl;
 
+        // 송신 종료 신호를 서버에 전달하여 메시지를 전송 완료
+        shutdown(sock, SHUT_WR);
+    }
 
-    std::vector<uint8_t> serialized_data = packed_data.serialize();
+    // 서버로부터 메시지 수신 대기
+    std::vector<uint8_t> buffer(2048); // 충분히 큰 버퍼 준비
+    int bytes_received = recv(sock, buffer.data(), buffer.size(), 0);
 
-    // 메시지 전송
-    send(sock, serialized_data.data(), serialized_data.size(), 0);
-    std::cout << "PackedData message sent" << std::endl;
+    if (bytes_received > 0) {
+        buffer.resize(bytes_received); // 실제 수신된 데이터만큼 버퍼 크기 조정
+        handle_message(buffer); // 수신한 메시지 처리
+    } else if (bytes_received == 0) {
+        std::cout << "Connection closed by server" << std::endl;
+    } else {
+        std::cerr << "Receive error" << std::endl;
+    }
 
-
-    close(sock);
+    close(sock); // 소켓 종료
     return 0;
-
 }
