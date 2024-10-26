@@ -32,7 +32,8 @@ int main() {
 
     // 서버로 PackedData 메시지 전송
     {
-        PackedData packed_data(1, 123456789);
+        ExampleMessage packed_data(2, "Hello Message", {5, 7, 9, 47});
+        // PackedData packed_data(1, 123456789);
         std::vector<uint8_t> serialized_data = packed_data.serialize();
         send(sock, serialized_data.data(), serialized_data.size(), 0);
         std::cout << "PackedData message sent to server" << std::endl;
