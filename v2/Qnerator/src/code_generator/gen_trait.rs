@@ -14,6 +14,12 @@ pub struct CodeGenProperty {
     gen_mode: GenType
 }
 
+impl CodeGenProperty {
+    pub fn new() -> Self {
+        return CodeGenProperty{directory : "".to_string(), file_path : "".to_string(), gen_mode : GenType::NONE}
+    }
+}
+
 pub trait CodeGenerator {
     fn read_file(&self)  {
         
