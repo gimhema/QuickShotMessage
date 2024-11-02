@@ -25,7 +25,7 @@ impl GenPrompt {
         s.split_whitespace().next().unwrap_or("")
     }
 
-    pub fn read_argv(&mut self, argv: String) -> MODE {
+    pub fn set_mode_by_prefix(&mut self, argv: String) -> MODE {
         let first_word = self.get_first_word(&argv);
 
         match first_word.to_lowercase().as_str() {
@@ -34,4 +34,37 @@ impl GenPrompt {
             _ => MODE::DEFAULT,
         }
     }
+
+    pub fn print_help(&mut self) {
+        println!("===============================");
+        println!("-d");
+        println!("-f");
+        println!("===============================");
+    }
+
+    pub fn parse(&mut self, _mode : MODE, argv: String) {
+        
+        match _mode {
+            MODE::FILE => {
+
+            },
+            MODE::DIRECTORY => {
+
+            },
+            _ => {println!("Unexpected action . . . .");}
+        }
+
+    }
+
+    pub fn read_argv(&mut self, argv: String) {
+
+        self.mode = self.set_mode_by_prefix(argv);
+
+        match self.mode {
+            MODE::DEFAULT => { self.print_help(); }
+            _ => { self.print_help(); }
+        }
+
+    }
+
 }
