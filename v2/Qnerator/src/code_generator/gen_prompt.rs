@@ -55,9 +55,27 @@ impl GenPrompt {
         return result.clone()
     }
 
-    pub fn check_lang_format(lang_format : String) -> GenType {
+    pub fn check_lang_format(file_name : String) -> GenType {
 
+        let path = Path::new(&file_name);
 
+        match path.extension().and_then(|ext| ext.to_str()) {
+            Some("cpp") => {
+                return GenType::CPP
+            },
+            Some("rs") => {
+                return GenType::RUST
+            },
+            Some("py") => {
+                return GenType::PYTHON
+            },
+            Some("go") => {
+                return GenType::GO
+            },
+            _ => {
+                println!("Unexpected Format");
+            }
+        }
 
         return GenType::NONE
     }
@@ -65,18 +83,27 @@ impl GenPrompt {
     pub fn parse_file(file_name : String) -> String {
 
         // 1. check file format
+        // 2. decide parse mode 
 
         match Self::check_lang_format(file_name) {
-            GenType::CPP => {println!("checked cpp");}
-            GenType::GO  => {println!("checked go");}
-            GenType::PYTHON  => {println!("checked python");}
-            GenType::RUST  => {println!("checked rust");}
-            GenType::NONE  => {println!("unexpected format . . .");}
+            GenType::CPP => {
+                println!("checked cpp");
+            }
+            GenType::GO  => {
+                println!("checked go");
+            }
+            GenType::PYTHON  => {
+                println!("checked python");
+            }
+            GenType::RUST  => {
+                println!("checked rust");
+            }
+            GenType::NONE  => {
+                println!("unexpected format . . .");
+            }
             _ => {println!("unexpected format . . .");}
         }
 
-
-        // 2. decide parse mode 
 
         return "".to_string()
     }
