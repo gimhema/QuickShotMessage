@@ -42,9 +42,9 @@ impl GenPrompt {
         println!("===============================");
     }
 
-    pub fn parse(&mut self, _mode : MODE, argv: String) {
+    pub fn parse(&mut self, argv: Vec<String>) {
         
-        match _mode {
+        match self.mode {
             MODE::FILE => {
                 
             },
@@ -62,6 +62,8 @@ impl GenPrompt {
 
         match self.mode {
             MODE::DEFAULT => { self.print_help(); }
+            MODE::FILE => {self.parse(argv.clone());}
+            MODE::DIRECTORY => {self.parse(argv.clone());}
             _ => { self.print_help(); }
         }
 
