@@ -8,6 +8,9 @@ use std::path::Path;
 
 use super::GenType;
 
+use super::CPPGenerator;
+use super::RustGenerator;
+
 // qnerator -f <FILE_NAME> <GENERATE_DIRECTORY>
 // qnerator -d <FILE_DIRECTORY> <GENERATE_DIRECTORY>
 
@@ -88,6 +91,9 @@ impl GenPrompt {
         match Self::check_lang_format(file_name) {
             GenType::CPP => {
                 println!("checked cpp");
+                let mut generator = CPPGenerator::new();
+
+                generator.parse();
             }
             GenType::GO  => {
                 println!("checked go");
@@ -97,6 +103,9 @@ impl GenPrompt {
             }
             GenType::RUST  => {
                 println!("checked rust");
+                let mut generator = RustGenerator::new();
+
+                generator.parse();
             }
             GenType::NONE  => {
                 println!("unexpected format . . .");
