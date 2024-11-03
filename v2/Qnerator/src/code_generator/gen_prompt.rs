@@ -2,6 +2,9 @@
 
 use super::gen_trait::*;
 
+use std::fs::{File, OpenOptions};
+use std::io::{self, Write, Read};
+
 // qnerator -f <FILE_NAME> <GENERATE_DIRECTORY>
 // qnerator -d <FILE_DIRECTORY> <GENERATE_DIRECTORY>
 
@@ -42,14 +45,47 @@ impl GenPrompt {
         println!("===============================");
     }
 
+    pub fn find_file_from_directory(directroy : String) -> Vec<String> {
+        let mut result = Vec::new();
+
+
+        return result.clone()
+    }
+
+    pub fn parse_file(file_name : String) -> String {
+
+        // 1. check file format
+
+        // 2. decide parse mode 
+
+        return "".to_string()
+    }
+
+    pub fn generate(content : String, generate_path : String) {
+
+    }
+
     pub fn parse(&mut self, argv: Vec<String>) {
         
         match self.mode {
             MODE::FILE => {
-                
+                let mut _parse_result = Self::parse_file(argv[2].clone());
+
+                Self::generate(_parse_result, argv[3].clone());
             },
             MODE::DIRECTORY => {
 
+                let mut _file_list = Self::find_file_from_directory(argv[2].clone());
+
+                for file in &_file_list {
+
+                    let mut _parse_result = Self::parse_file(file.clone());
+
+                    Self::generate(_parse_result, argv[3].clone());
+    
+                }
+
+            
             },
             _ => {println!("Unexpected action . . . .");}
         }
