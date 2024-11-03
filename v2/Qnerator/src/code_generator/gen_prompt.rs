@@ -4,6 +4,9 @@ use super::gen_trait::*;
 
 use std::fs::{File, OpenOptions};
 use std::io::{self, Write, Read};
+use std::path::Path;
+
+use super::GenType;
 
 // qnerator -f <FILE_NAME> <GENERATE_DIRECTORY>
 // qnerator -d <FILE_DIRECTORY> <GENERATE_DIRECTORY>
@@ -52,9 +55,26 @@ impl GenPrompt {
         return result.clone()
     }
 
+    pub fn check_lang_format(lang_format : String) -> GenType {
+
+
+
+        return GenType::NONE
+    }
+
     pub fn parse_file(file_name : String) -> String {
 
         // 1. check file format
+
+        match Self::check_lang_format(file_name) {
+            GenType::CPP => {println!("checked cpp");}
+            GenType::GO  => {println!("checked go");}
+            GenType::PYTHON  => {println!("checked python");}
+            GenType::RUST  => {println!("checked rust");}
+            GenType::NONE  => {println!("unexpected format . . .");}
+            _ => {println!("unexpected format . . .");}
+        }
+
 
         // 2. decide parse mode 
 
