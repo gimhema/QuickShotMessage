@@ -94,6 +94,7 @@ impl GenPrompt {
                 let mut generator = CPPGenerator::new();
 
                 generator.parse();
+                generator.generate();
             }
             GenType::GO  => {
                 println!("checked go");
@@ -106,6 +107,7 @@ impl GenPrompt {
                 let mut generator = RustGenerator::new();
 
                 generator.parse();
+                generator.generate();
             }
             GenType::NONE  => {
                 println!("unexpected format . . .");
