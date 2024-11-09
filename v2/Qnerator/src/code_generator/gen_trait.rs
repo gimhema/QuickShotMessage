@@ -21,15 +21,18 @@ impl CodeGenProperty {
 }
 
 pub trait CodeGenerator {
-    fn read_file(&self)  {
-        
-    }
+    
+    fn read_file(&self) -> Vec<String>;
 
     fn parse(&self) {
 
     }
     
     fn generate(&self) {
+
+    }
+
+    fn set_source(&mut self, _source : String) {
 
     }
 }

@@ -231,9 +231,37 @@ impl CodeGenerator for CPPGenerator {
 
     fn parse(&self) {
         // Implementation of parse method
+
+        /*
+        let fields = vec![
+        ("Integer", "id"),
+        ("Long", "timestamp"),
+        ("Float", "val1"),
+        ("String", "name"),
+        ("ArrayInteger", "nums"),
+        ("ArrayFloat", "vals"),
+        ];
+
+        let cpp_generator = CPPGenerator::new();
+
+        // C++ 코드 생성
+        let cpp_code = cpp_generator.format_cpp_code("MyStruct", &fields);
+
+        println!("{}", cpp_code);
+        
+         */
+        let fields = self.read_file();
+
+        // let cpp_code = self.format_cpp_code(self.source.as_str(), fields);
     }
 
-    fn read_file(&self) {
+    fn read_file(&self) -> Vec<String> {
         // Implementation of read_file method
+        // self.source 가지고 뭘 한다 . . .
+        return Vec::new()
+    }
+
+    fn set_source(&mut self, _source : String) {
+        self.source = _source.clone();
     }
 }

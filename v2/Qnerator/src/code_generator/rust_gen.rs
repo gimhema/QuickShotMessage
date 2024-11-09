@@ -23,7 +23,7 @@ impl CodeGenerator for RustGenerator {
         
     }
 
-    fn read_file(&self) {
-        
+    fn read_file(&self) -> Vec<String> {
+        return Vec::new()
     }
 }
