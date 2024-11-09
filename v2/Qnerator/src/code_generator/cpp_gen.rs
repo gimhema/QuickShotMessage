@@ -3,8 +3,6 @@ use super::gen_trait::*;
 use std::fs;
 use std::io::{self, Write};
 
-// push test
-
 pub struct CPPGenerator {
     source: String,
 }
@@ -27,6 +25,7 @@ impl CPPGenerator {
             let cpp_type = match *typ {
                 "Integer" => "uint32_t",
                 "Long" => "uint64_t",
+                "Float" => "float",
                 _ => panic!("Unsupported type: {}", typ),
             };
             cpp_code.push_str(&format!("    {} {};\n", cpp_type, name));
@@ -39,6 +38,7 @@ impl CPPGenerator {
                 let cpp_type = match *typ {
                     "Integer" => "uint32_t",
                     "Long" => "uint64_t",
+                    "Float" => "float",
                     _ => panic!("Unsupported type: {}", typ),
                 };
                 format!("{} {}", cpp_type, name)
@@ -64,6 +64,7 @@ impl CPPGenerator {
             let size = match *typ {
                 "Integer" => 4,
                 "Long" => 8,
+                "Float" => 4,
                 _ => panic!("Unsupported type: {}", typ),
             };
             cpp_code.push_str(&format!(
@@ -88,6 +89,7 @@ impl CPPGenerator {
             let cpp_type = match *typ {
                 "Integer" => "uint32_t",
                 "Long" => "uint64_t",
+                "Float" => "float",
                 _ => panic!("Unsupported type: {}", typ),
             };
             cpp_code.push_str(&format!("        {} {};\n", cpp_type, name));
@@ -98,6 +100,7 @@ impl CPPGenerator {
             let size = match *typ {
                 "Integer" => 4,
                 "Long" => 8,
+                "Float" => 4,
                 _ => panic!("Unsupported type: {}", typ),
             };
             cpp_code.push_str(&format!(
