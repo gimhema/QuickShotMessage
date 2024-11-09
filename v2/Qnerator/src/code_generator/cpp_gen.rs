@@ -3,6 +3,8 @@ use super::gen_trait::*;
 use std::fs;
 use std::io::{self, Write};
 
+// push test
+
 pub struct CPPGenerator {
     source: String,
 }
