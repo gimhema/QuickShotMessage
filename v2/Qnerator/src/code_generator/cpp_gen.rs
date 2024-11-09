@@ -1,5 +1,4 @@
 use super::CodeGenerator;
-use super::gen_trait::*;
 use std::fs;
 use std::io::{self, Write};
 
@@ -23,27 +22,55 @@ impl CPPGenerator {
         // Field definitions
         for (typ, name) in fields {
             let cpp_type = match *typ {
-                "Integer" => "uint32_t",
-                "Long" => "uint64_t",
-                "Float" => "float",
+                "Integer" => "uint32_t".to_string(),
+                "Long" => "uint64_t".to_string(),
+                "Float" => "float".to_string(),
+                "String" => "std::string".to_string(),
+                typ if typ.starts_with("Array") => {
+                    let element_type = match &typ[6..] {
+                        "Integer" => "int32_t".to_string(),
+                        "Long" => "int64_t".to_string(),
+                        "Float" => "float".to_string(),
+                        "String" => "std::string".to_string(),
+                        _ => panic!("Unsupported array type: {}", &typ[6..]),
+                    };
+                    format!("std::vector<{}>", element_type)
+                }
                 _ => panic!("Unsupported type: {}", typ),
             };
             cpp_code.push_str(&format!("    {} {};\n", cpp_type, name));
         }
 
-        // Constructor
         let constructor_params: Vec<String> = fields
-            .iter()
-            .map(|(typ, name)| {
-                let cpp_type = match *typ {
-                    "Integer" => "uint32_t",
-                    "Long" => "uint64_t",
-                    "Float" => "float",
-                    _ => panic!("Unsupported type: {}", typ),
-                };
-                format!("{} {}", cpp_type, name)
-            })
-            .collect();
+        .iter()
+        .map(|(typ, name)| {
+            let cpp_type = match *typ {
+                "Integer" => "uint32_t".to_string(),  // `&str`을 `String`으로 변환
+                "Long" => "uint64_t".to_string(),
+                "Float" => "float".to_string(),
+                "String" => "std::string".to_string(),
+                typ if typ.starts_with("Array") => {
+                    let element_type = match &typ[6..] {
+                        "Integer" => "int32_t".to_string(),
+                        "Long" => "int64_t".to_string(),
+                        "Float" => "float".to_string(),
+                        "String" => "std::string".to_string(),
+                        _ => panic!("Unsupported array type: {}", &typ[6..]),
+                    };
+    
+                    // `format!`에서 반환되는 `String`을 그대로 사용
+                    format!("std::vector<{}>", element_type)
+                },
+                _ => panic!("Unsupported type: {}", typ),
+            };
+    
+            format!("{} {}", cpp_type, name)
+        })
+        .collect();
+    
+    
+    
+
 
         cpp_code.push_str(&format!(
             "\n    {}({}) : ",
@@ -56,22 +83,39 @@ impl CPPGenerator {
         cpp_code.push_str(" {}\n\n");
 
         // Serialize function
-        cpp_code.push_str("    std::vector<uint8_t> serialize() {\n");
-        cpp_code.push_str("        std::vector<uint8_t> buffer(sizeof(*this));\n");
+        cpp_code.push_str("    std::vector<uint8_t> serialize() const {\n");
+        cpp_code.push_str("        std::vector<uint8_t> buffer;\n");
 
-        let mut offset = 0;
         for (typ, name) in fields {
-            let size = match *typ {
-                "Integer" => 4,
-                "Long" => 8,
-                "Float" => 4,
+            match *typ {
+                "Integer" | "Long" | "Float" => {
+                    cpp_code.push_str(&format!(
+                        "        buffer.insert(buffer.end(), reinterpret_cast<const uint8_t*>(&{}), reinterpret_cast<const uint8_t*>(&{} + 1));\n",
+                        name, name
+                    ));
+                }
+                "String" => {
+                    cpp_code.push_str(&format!(
+                        "        buffer.insert(buffer.end(), reinterpret_cast<const uint8_t*>(&{}.size()), reinterpret_cast<const uint8_t*>(&{}.size() + 1));\n",
+                        name, name
+                    ));
+                    cpp_code.push_str(&format!(
+                        "        buffer.insert(buffer.end(), {}.begin(), {}.end());\n",
+                        name, name
+                    ));
+                }
+                typ if typ.starts_with("Array") => {
+                    cpp_code.push_str(&format!(
+                        "        buffer.insert(buffer.end(), reinterpret_cast<const uint8_t*>(&{}.size()), reinterpret_cast<const uint8_t*>(&{}.size() + 1));\n",
+                        name, name
+                    ));
+                    cpp_code.push_str(&format!(
+                        "        buffer.insert(buffer.end(), reinterpret_cast<const uint8_t*>({}.data()), reinterpret_cast<const uint8_t*>({}.data() + {}.size()));\n",
+                        name, name, name
+                    ));
+                }
                 _ => panic!("Unsupported type: {}", typ),
-            };
-            cpp_code.push_str(&format!(
-                "        std::memcpy(buffer.data() + {}, &{}, {});\n",
-                offset, name, size
-            ));
-            offset += size;
+            }
         }
         cpp_code.push_str("        return buffer;\n    }\n\n");
 
@@ -80,41 +124,63 @@ impl CPPGenerator {
             "    static {} deserialize(const std::vector<uint8_t>& buffer) {{\n",
             struct_name
         ));
-        cpp_code.push_str(&format!("        if (buffer.size() < sizeof({})) {{\n", struct_name));
+        cpp_code.push_str("        size_t offset = 0;\n");
 
-        cpp_code.push_str("            throw std::runtime_error(\"Buffer too short\");\n");
-        cpp_code.push_str("        }\n");
-
+        let mut deserialized_fields = Vec::new();
         for (typ, name) in fields {
-            let cpp_type = match *typ {
-                "Integer" => "uint32_t",
-                "Long" => "uint64_t",
-                "Float" => "float",
+            match *typ {
+                "Integer" => cpp_code.push_str(&format!(
+                    "        uint32_t {} = *reinterpret_cast<const uint32_t*>(buffer.data() + offset);\n        offset += sizeof(uint32_t);\n",
+                    name
+                )),
+                "Long" => cpp_code.push_str(&format!(
+                    "        uint64_t {} = *reinterpret_cast<const uint64_t*>(buffer.data() + offset);\n        offset += sizeof(uint64_t);\n",
+                    name
+                )),
+                "Float" => cpp_code.push_str(&format!(
+                    "        float {} = *reinterpret_cast<const float*>(buffer.data() + offset);\n        offset += sizeof(float);\n",
+                    name
+                )),
+                "String" => {
+                    cpp_code.push_str(&format!(
+                        "        uint32_t {0}_length = *reinterpret_cast<const uint32_t*>(buffer.data() + offset);\n        offset += sizeof(uint32_t);\n",
+                        name
+                    ));
+                    cpp_code.push_str(&format!(
+                        "        std::string {0}(buffer.begin() + offset, buffer.begin() + offset + {0}_length);\n        offset += {0}_length;\n",
+                        name
+                    ));
+                }
+                typ if typ.starts_with("Array") => {
+                    cpp_code.push_str(&format!(
+                        "        uint32_t {0}_length = *reinterpret_cast<const uint32_t*>(buffer.data() + offset);\n        offset += sizeof(uint32_t);\n",
+                        name
+                    ));
+                    let element_type = match &typ[6..] {
+                        "Integer" => "int32_t",
+                        "Long" => "int64_t",
+                        "Float" => "float",
+                        "String" => "std::string",
+                        _ => panic!("Unsupported array type: {}", &typ[6..]),
+                    };
+                    cpp_code.push_str(&format!(
+                        "        std::vector<{}> {}({}_length);\n",
+                        element_type, name, name
+                    ));
+                    cpp_code.push_str(&format!(
+                        "        std::memcpy({}.data(), buffer.data() + offset, {}_length * sizeof({}));\n        offset += {}_length * sizeof({});\n",
+                        name, name, element_type, name, element_type
+                    ));
+                }
                 _ => panic!("Unsupported type: {}", typ),
-            };
-            cpp_code.push_str(&format!("        {} {};\n", cpp_type, name));
+            }
+            deserialized_fields.push(name.to_string());
         }
 
-        offset = 0;
-        for (typ, name) in fields {
-            let size = match *typ {
-                "Integer" => 4,
-                "Long" => 8,
-                "Float" => 4,
-                _ => panic!("Unsupported type: {}", typ),
-            };
-            cpp_code.push_str(&format!(
-                "        std::memcpy(&{}, buffer.data() + {}, {});\n",
-                name, offset, size
-            ));
-            offset += size;
-        }
-
-        let constructor_args: Vec<String> = fields.iter().map(|(_, name)| name.to_string()).collect();
         cpp_code.push_str(&format!(
             "        return {}({});\n    }}\n",
             struct_name,
-            constructor_args.join(", ")
+            deserialized_fields.join(", ")
         ));
 
         // Friend operator<< overload
@@ -156,6 +222,7 @@ impl CPPGenerator {
         Some(cpp_code)
     }
 }
+
 
 impl CodeGenerator for CPPGenerator {
     fn generate(&self) {
