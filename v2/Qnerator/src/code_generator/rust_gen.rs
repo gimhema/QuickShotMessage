@@ -19,11 +19,15 @@ impl CodeGenerator for RustGenerator {
         
     }
 
-    fn parse(&self) {
+    fn parse(&mut self) {
         
     }
 
-    fn read_file(&self) -> Vec<String> {
-        return Vec::new()
+    fn read_file(&mut self) -> Vec<(&'static str, &'static str)> {
+        let result = vec![
+            ("", "")
+        ];
+    
+        result
     }
 }

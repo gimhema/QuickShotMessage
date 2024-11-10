@@ -229,7 +229,7 @@ impl CodeGenerator for CPPGenerator {
         // Implementation of generate method
     }
 
-    fn parse(&self) {
+    fn parse(&mut self) {
         // Implementation of parse method
 
         /*
@@ -250,16 +250,23 @@ impl CodeGenerator for CPPGenerator {
         println!("{}", cpp_code);
         
          */
-        let fields = self.read_file();
-
-        // let cpp_code = self.format_cpp_code(self.source.as_str(), fields);
+        let file_name = self.source.clone(); // source 값을 로컬 변수로 복사하여 빌림 해제
+        let fields = self.read_file();       // 가변 참조로 사용 가능
+        let cpp_code = self.format_cpp_code(&file_name, &fields);
+    
+        // 생성된 C++ 코드를 확인
+        println!("{}", cpp_code);
+    
     }
 
-    fn read_file(&self) -> Vec<String> {
-        // Implementation of read_file method
-        // self.source 가지고 뭘 한다 . . .
-        return Vec::new()
-    }
+    fn read_file(&mut self) -> Vec<(&'static str, &'static str)> {
+    let result = vec![
+        ("", "")
+    ];
+
+    result
+}
+
 
     fn set_source(&mut self, _source : String) {
         self.source = _source.clone();
