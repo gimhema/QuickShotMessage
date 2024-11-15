@@ -22,7 +22,7 @@ impl CodeGenProperty {
 
 pub trait CodeGenerator {
     
-    fn read_file(&mut self) -> Vec<(&'static str, &'static str)>;
+    fn read_file(&mut self) -> Vec<(String, String)>; // Vec<(&'static str, &'static str)>;
 
     fn parse(&mut self) {
 
