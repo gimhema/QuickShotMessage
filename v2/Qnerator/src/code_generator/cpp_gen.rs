@@ -128,46 +128,12 @@ impl CodeGenerator for CPPGenerator {
         
          */
         let file_name = self.source.clone(); // source 값을 로컬 변수로 복사하여 빌림 해제
-        // let fields = self.read_file();       // 가변 참조로 사용 가능
         let fields = read_parse_struct(self.source.clone());
         let cpp_code = self.format_cpp_code(&file_name, &fields);
     
         // 생성된 C++ 코드를 확인
         println!("{}", cpp_code);
     
-    }
-
-    fn read_file(&mut self) -> Vec<(String, String)> {
-        let mut fields = Vec::new();
-        
-        // 파일 열기
-        if let Ok(file) = File::open(&self.source) {
-            let reader = BufReader::new(file);
-    
-            for line in reader.lines().flatten() {
-                let trimmed_line = line.trim();
-                
-                // 필드 타입과 이름을 가져오기
-                let parts: Vec<&str> = trimmed_line.split_whitespace().collect();
-                if parts.len() == 2 {
-                    let field_type = match parts[0] {
-                        "Integer" => "Integer".to_string(),
-                        "Long" => "Long".to_string(),
-                        "Float" => "Float".to_string(),
-                        "String" => "String".to_string(),
-                        "ArrayInteger" => "ArrayInteger".to_string(),
-                        "ArrayFloat" => "ArrayFloat".to_string(),
-                        _ => continue,
-                    };
-                    
-                    let field_name = parts[1].to_string();
-    
-                    fields.push((field_type, field_name));
-                }
-            }
-        }
-    
-        fields
     }
 
 

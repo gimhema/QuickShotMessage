@@ -56,8 +56,6 @@ pub fn read_parse_struct(file_name : String) -> Vec<(String, String)> {
 
 pub trait CodeGenerator {
     
-    fn read_file(&mut self) -> Vec<(String, String)>; // Vec<(&'static str, &'static str)>;
-
     fn parse(&mut self) {
 
     }
