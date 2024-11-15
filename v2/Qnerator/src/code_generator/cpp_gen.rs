@@ -1,3 +1,5 @@
+use crate::code_generator::read_parse_struct;
+
 use super::CodeGenerator;
 use std::fs;
 use std::io::{self, Write};
@@ -126,7 +128,8 @@ impl CodeGenerator for CPPGenerator {
         
          */
         let file_name = self.source.clone(); // source 값을 로컬 변수로 복사하여 빌림 해제
-        let fields = self.read_file();       // 가변 참조로 사용 가능
+        // let fields = self.read_file();       // 가변 참조로 사용 가능
+        let fields = read_parse_struct(self.source.clone());
         let cpp_code = self.format_cpp_code(&file_name, &fields);
     
         // 생성된 C++ 코드를 확인
