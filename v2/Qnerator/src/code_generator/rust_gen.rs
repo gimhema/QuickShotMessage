@@ -35,6 +35,10 @@ impl CodeGenerator for RustGenerator {
     }
 
     fn parse(&mut self) {
+
+        let file_name = self.source.clone();
+        let fields = read_parse_struct(self.source.clone());
+        let rust_code = self.format_rust_code(&file_name, &fields);
         
     }
 
