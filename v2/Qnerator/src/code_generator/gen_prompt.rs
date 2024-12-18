@@ -94,6 +94,7 @@ impl GenPrompt {
                 let mut generator = CPPGenerator::new();
 
                 generator.parse();
+                generator.source = file_name;
                 generator.generate();
             }
             GenType::GO  => {
@@ -107,6 +108,7 @@ impl GenPrompt {
                 let mut generator = RustGenerator::new();
 
                 generator.parse();
+                generator.source = file_name;
                 generator.generate();
             }
             GenType::NONE  => {
