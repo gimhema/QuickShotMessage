@@ -93,8 +93,8 @@ impl GenPrompt {
                 println!("checked cpp");
                 let mut generator = CPPGenerator::new();
 
-                generator.parse();
                 generator.source = file_name;
+                generator.parse();
                 generator.generate();
             }
             GenType::GO  => {
@@ -107,8 +107,8 @@ impl GenPrompt {
                 println!("checked rust");
                 let mut generator = RustGenerator::new();
 
-                generator.parse();
                 generator.source = file_name;
+                generator.parse();
                 generator.generate();
             }
             GenType::NONE  => {
