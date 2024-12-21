@@ -22,6 +22,10 @@ impl CPPGenerator {
         self.source = _source;
     }
 
+    pub fn get_source(&mut self) -> String {
+        return self.source.clone()
+    }
+
     pub fn format_cpp_code(&mut self, struct_name: &str, fields: &[((String, String))]) -> String {
         let mut cpp_code = String::new();
     
