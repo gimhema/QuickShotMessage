@@ -87,13 +87,15 @@ impl GenPrompt {
 
         // 1. check file format
         // 2. decide parse mode 
+        let mut _source = file_name.clone();
 
         match Self::check_lang_format(file_name) {
             GenType::CPP => {
                 println!("checked cpp");
                 let mut generator = CPPGenerator::new();
 
-                generator.source = file_name;
+
+                generator.set_source(_source);
                 generator.parse();
                 generator.generate();
             }
@@ -107,7 +109,7 @@ impl GenPrompt {
                 println!("checked rust");
                 let mut generator = RustGenerator::new();
 
-                generator.source = file_name;
+                generator.set_source(_source);
                 generator.parse();
                 generator.generate();
             }
