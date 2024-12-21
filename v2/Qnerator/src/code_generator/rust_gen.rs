@@ -15,6 +15,10 @@ impl RustGenerator {
         return RustGenerator{source : "".to_string()}
     }
 
+    pub fn set_source(&mut self,  _source: String) {
+        self.source = _source;
+    }
+
     pub fn format_rust_code(&mut self, file_name: String, fields: Vec<(String, String)>) -> String {
         // 구조체 이름 생성 (파일 이름에서 확장자를 제거하고 PascalCase로 변환)
         let struct_name = file_name
