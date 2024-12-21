@@ -155,8 +155,8 @@ impl RustGenerator {
 
 
 impl CodeGenerator for RustGenerator {
-    fn generate(&self) {
-        
+    fn generate(&mut self) {
+
     }
 
     fn parse(&mut self) {

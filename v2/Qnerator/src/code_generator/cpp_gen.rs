@@ -234,8 +234,8 @@ impl CPPGenerator {
 
 
 impl CodeGenerator for CPPGenerator {
-    fn generate(&self) {
-        // Implementation of generate method
+    fn generate(&mut self) {
+
     }
 
     fn parse(&mut self) {

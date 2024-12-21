@@ -60,7 +60,7 @@ pub trait CodeGenerator {
 
     }
     
-    fn generate(&self) {
+    fn generate(&mut self) {
 
     }
 
