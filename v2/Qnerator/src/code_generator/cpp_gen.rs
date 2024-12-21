@@ -235,7 +235,9 @@ impl CPPGenerator {
 
 impl CodeGenerator for CPPGenerator {
     fn generate(&mut self) {
+        let mut generate_cpp_code = self.get_source();
 
+        self.generate_cpp_code(&generate_cpp_code);
     }
 
     fn parse(&mut self) {

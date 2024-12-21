@@ -146,17 +146,17 @@ impl RustGenerator {
     }
     
 
-    pub fn generate_rust_code(&mut self, contents: &str) -> Option<String> {
-        let rust_code = String::new();
+    pub fn generate_rust_code(&mut self)  {
+        
+        let mut generate_rust_code = self.get_source();
 
-        return Some(rust_code)
     }
 }
 
 
 impl CodeGenerator for RustGenerator {
     fn generate(&mut self) {
-
+        self.generate_rust_code();
     }
 
     fn parse(&mut self) {
