@@ -208,28 +208,9 @@ impl CPPGenerator {
     }
     
 
-    pub fn generate_cpp_code(&mut self) -> Option<String> {
+    pub fn generate_cpp_code(&mut self) {
         // let mut lines = contents.lines();
         let mut _sources = self.get_source();
-        let mut lines = _sources.as_str().lines();
-
-        // Get struct name from the first line
-        let struct_name_line = lines.next()?;
-        let struct_name = struct_name_line.split_whitespace().nth(1)?;
-    
-        // Collect field information, converting to String
-        let mut fields = Vec::new();
-        for line in lines {
-            let parts: Vec<&str> = line.trim().split_whitespace().collect();
-            if parts.len() == 2 {
-                // Convert parts[0] and parts[1] to String before pushing
-                fields.push((parts[0].to_string(), parts[1].to_string()));
-            }
-        }
-    
-        // Generate C++ code using the updated fields (Vec<(String, String)>)
-        let cpp_code = self.format_cpp_code(struct_name, &fields);
-        Some(cpp_code)
     }
     
 }
