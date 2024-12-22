@@ -155,7 +155,7 @@ impl RustGenerator {
 
 
 impl CodeGenerator for RustGenerator {
-    fn generate(&mut self) {
+    fn generate(&mut self, gen_property :  CodeGenProperty) {
         self.generate_rust_code();
     }
 

@@ -103,7 +103,7 @@ impl GenPrompt {
 
                 generator.set_source(_source);
                 generator.parse();
-                generator.generate();
+                generator.generate(_property_clone);
             }
             GenType::GO  => {
                 println!("checked go");
@@ -117,7 +117,7 @@ impl GenPrompt {
 
                 generator.set_source(_source);
                 generator.parse();
-                generator.generate();
+                generator.generate(_property_clone);
             }
             GenType::NONE  => {
                 println!("unexpected format . . .");

@@ -6,7 +6,7 @@ use std::io::{self, Write};
 
 use std::fs::File;
 use std::io::{BufRead, BufReader};
-
+use super::gen_trait::*;
 pub struct CPPGenerator {
     source: String,
 }
@@ -217,7 +217,7 @@ impl CPPGenerator {
 
 
 impl CodeGenerator for CPPGenerator {
-    fn generate(&mut self) {
+    fn generate(&mut self, gen_property : CodeGenProperty) {
         self.generate_cpp_code();
     }
 
