@@ -87,10 +87,12 @@ impl GenPrompt {
         return GenType::NONE
     }
 
-    pub fn parse_file(file_name : String) -> String {
+    pub fn parse_file(&mut self, file_name : String) -> String {
 
         // 1. check file format
         // 2. decide parse mode 
+        let mut _property_clone = self.get_property_clone();
+
         let mut _source = file_name.clone();
 
         match Self::check_lang_format(file_name) {
@@ -135,7 +137,7 @@ impl GenPrompt {
         
         match self.mode {
             MODE::FILE => {
-                let mut _parse_result = Self::parse_file(argv[2].clone());
+                let mut _parse_result = self.parse_file(argv[2].clone());
 
                 Self::generate(_parse_result, argv[3].clone());
             },
@@ -145,7 +147,7 @@ impl GenPrompt {
 
                 for file in &_file_list {
 
-                    let mut _parse_result = Self::parse_file(file.clone());
+                    let mut _parse_result = self.parse_file(file.clone());
 
                     Self::generate(_parse_result, argv[3].clone());
     
