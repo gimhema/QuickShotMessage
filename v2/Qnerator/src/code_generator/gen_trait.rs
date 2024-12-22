@@ -21,7 +21,20 @@ impl CodeGenProperty {
     pub fn new() -> Self {
         return CodeGenProperty{directory : "".to_string(), file_path : "".to_string(), gen_mode : GenType::NONE}
     }
+
+    pub fn get_directory(&mut self) -> String {
+        return self.directory.clone()
+    }
+
+    pub fn get_file_path(&mut self) -> String {
+        return self.file_path.clone()
+    }
+
+    pub fn get_mode(&mut self) -> GenType {
+        return self.gen_mode.clone()
+    }
 }
+
 
 pub fn read_parse_struct(file_name : String) -> Vec<(String, String)> {
     let mut fields = Vec::new();

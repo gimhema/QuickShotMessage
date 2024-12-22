@@ -30,6 +30,10 @@ impl GenPrompt {
         return GenPrompt{property : CodeGenProperty::new(), mode : MODE::DEFAULT}
     }
 
+    pub fn get_property_clone(&mut self) -> CodeGenProperty {
+        return self.property.clone()
+    }
+
     fn get_first_word<'a>(&mut self, s: &'a str) -> &'a str {
         s.split_whitespace().next().unwrap_or("")
     }
