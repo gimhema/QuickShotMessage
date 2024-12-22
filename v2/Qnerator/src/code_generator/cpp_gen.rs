@@ -208,9 +208,11 @@ impl CPPGenerator {
     }
     
 
-    pub fn generate_cpp_code(&mut self, contents: &str) -> Option<String> {
-        let mut lines = contents.lines();
-    
+    pub fn generate_cpp_code(&mut self) -> Option<String> {
+        // let mut lines = contents.lines();
+        let mut _sources = self.get_source();
+        let mut lines = _sources.as_str().lines();
+
         // Get struct name from the first line
         let struct_name_line = lines.next()?;
         let struct_name = struct_name_line.split_whitespace().nth(1)?;
@@ -235,9 +237,7 @@ impl CPPGenerator {
 
 impl CodeGenerator for CPPGenerator {
     fn generate(&mut self) {
-        let mut generate_cpp_code = self.get_source();
-
-        self.generate_cpp_code(&generate_cpp_code);
+        self.generate_cpp_code();
     }
 
     fn parse(&mut self) {
