@@ -1,6 +1,7 @@
 use std::fs::File;
 use std::io::{BufRead, BufReader};
 
+#[derive(Clone)]
 pub enum GenType {
     NONE,
     CPP,
@@ -9,6 +10,7 @@ pub enum GenType {
     PYTHON
 }
 
+#[derive(Clone)]
 pub struct CodeGenProperty {
     directory: String,
     file_path: String,
