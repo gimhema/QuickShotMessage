@@ -211,6 +211,7 @@ impl CPPGenerator {
     pub fn generate_cpp_code(&mut self) {
         // let mut lines = contents.lines();
         let mut _sources = self.get_source();
+        self.write(_sources);
     }
     
 }

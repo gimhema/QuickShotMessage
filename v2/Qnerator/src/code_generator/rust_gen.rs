@@ -150,6 +150,8 @@ impl RustGenerator {
         
         let mut generate_rust_code = self.get_source();
 
+        self.write(generate_rust_code);
+
     }
 }
 
