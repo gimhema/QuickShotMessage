@@ -1,6 +1,10 @@
 use std::fs::File;
 use std::io::{BufRead, BufReader};
 
+
+use std::io::{self, Write};
+use std::path::Path;
+
 #[derive(Clone)]
 pub enum GenType {
     NONE,
@@ -83,10 +87,24 @@ pub trait CodeGenerator {
 
     }
 
-    fn write(&mut self, _directory : String, _file_path : String, _source: String) {
-        
+    fn write(&mut self, _directory: String, _file_path: String, _source: String) {
         println!("Code Generate . . . .");
-
-        println!("Code generation completed.");
+    
+        // Create the full path by combining directory and file path
+        let full_path = Path::new(&_directory).join(&_file_path);
+    
+        // Try to open the file for writing
+        match File::create(&full_path) {
+            Ok(mut file) => {
+                if let Err(err) = file.write_all(_source.as_bytes()) {
+                    eprintln!("Failed to write to file: {}", err);
+                } else {
+                    println!("Code generation completed. File written to: {}", full_path.display());
+                }
+            }
+            Err(err) => {
+                eprintln!("Failed to create file: {}", err);
+            }
+        }
     }
 }
