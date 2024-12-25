@@ -82,4 +82,11 @@ pub trait CodeGenerator {
     fn set_source(&mut self, _source : String) {
 
     }
+
+    fn write(&mut self, _source: String) {
+        
+        println!("Code Generate . . . .");
+
+        println!("Code generation completed.");
+    }
 }
