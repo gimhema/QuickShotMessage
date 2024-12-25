@@ -146,19 +146,18 @@ impl RustGenerator {
     }
     
 
-    pub fn generate_rust_code(&mut self)  {
-        
-        let mut generate_rust_code = self.get_source();
 
-        self.write(generate_rust_code);
-
-    }
 }
 
 
 impl CodeGenerator for RustGenerator {
-    fn generate(&mut self, gen_property :  CodeGenProperty) {
-        self.generate_rust_code();
+    fn generate(&mut self, mut gen_property : CodeGenProperty) {
+
+        let mut _source = self.get_source();
+        let mut _file_path = gen_property.get_file_path();
+        let mut _directory = gen_property.get_directory();
+
+        self.write(_directory, _file_path, _source);
     }
 
     fn parse(&mut self) {

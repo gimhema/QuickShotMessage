@@ -207,19 +207,18 @@ impl CPPGenerator {
         cpp_code
     }
     
-
-    pub fn generate_cpp_code(&mut self) {
-        // let mut lines = contents.lines();
-        let mut _sources = self.get_source();
-        self.write(_sources);
-    }
     
 }
 
 
 impl CodeGenerator for CPPGenerator {
-    fn generate(&mut self, gen_property : CodeGenProperty) {
-        self.generate_cpp_code();
+    fn generate(&mut self, mut gen_property : CodeGenProperty) {
+
+        let mut _source = self.get_source();
+        let mut _file_path = gen_property.get_file_path();
+        let mut _directory = gen_property.get_directory();
+
+        self.write(_directory, _file_path, _source);
     }
 
     fn parse(&mut self) {

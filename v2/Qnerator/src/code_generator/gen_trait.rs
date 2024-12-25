@@ -83,7 +83,7 @@ pub trait CodeGenerator {
 
     }
 
-    fn write(&mut self, _source: String) {
+    fn write(&mut self, _directory : String, _file_path : String, _source: String) {
         
         println!("Code Generate . . . .");
 
