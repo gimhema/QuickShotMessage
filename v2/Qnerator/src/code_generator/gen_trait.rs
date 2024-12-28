@@ -37,6 +37,18 @@ impl CodeGenProperty {
     pub fn get_mode(&mut self) -> GenType {
         return self.gen_mode.clone()
     }
+
+    pub fn set_directory(&mut self, _direcotry : String) {
+        self.directory = _direcotry;
+    }
+
+    pub fn set_file_path(&mut self, _file_path : String) {
+        self.file_path = _file_path;
+    }
+
+    pub fn set_mode(&mut self, _type : GenType) {
+        self.gen_mode = _type;
+    }
 }
 
 
