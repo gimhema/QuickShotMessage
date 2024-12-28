@@ -129,17 +129,12 @@ impl GenPrompt {
         return "".to_string()
     }
 
-    pub fn generate(content : String, generate_path : String) {
-
-    }
 
     pub fn parse(&mut self, argv: Vec<String>) {
         
         match self.mode {
             MODE::FILE => {
                 let mut _parse_result = self.parse_file(argv[2].clone());
-
-                Self::generate(_parse_result, argv[3].clone());
             },
             MODE::DIRECTORY => {
 
@@ -148,8 +143,6 @@ impl GenPrompt {
                 for file in &_file_list {
 
                     let mut _parse_result = self.parse_file(file.clone());
-
-                    Self::generate(_parse_result, argv[3].clone());
     
                 }
 
