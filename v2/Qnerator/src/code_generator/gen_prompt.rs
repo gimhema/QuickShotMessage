@@ -153,9 +153,14 @@ impl GenPrompt {
 
     }
 
+    pub fn set_code_property(&mut self, argv: Vec<String>) {
+
+    }
+
     pub fn run(&mut self, argv: Vec<String>) {
 
         self.mode = self.set_mode_by_prefix(argv[1].clone());
+        self.set_code_property(argv.clone());
 
         match self.mode {
             MODE::DEFAULT => { self.print_help(); }
