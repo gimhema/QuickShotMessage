@@ -59,31 +59,6 @@ impl GenPrompt {
         return result.clone()
     }
 
-    pub fn check_lang_format(file_name : String) -> GenType {
-
-        let path = Path::new(&file_name);
-
-        match path.extension().and_then(|ext| ext.to_str()) {
-            Some("cpp") => {
-                return GenType::CPP
-            },
-            Some("rs") => {
-                return GenType::RUST
-            },
-            Some("py") => {
-                return GenType::PYTHON
-            },
-            Some("go") => {
-                return GenType::GO
-            },
-            _ => {
-                println!("Unexpected Format");
-            }
-        }
-
-        return GenType::NONE
-    }
-
     pub fn parse_file(&mut self, file_name : String) -> String {
 
         // 1. check file format
@@ -127,6 +102,18 @@ impl GenPrompt {
         return "".to_string()
     }
 
+    pub fn set_generate_mode_by_console_argv(&mut self, command : String) {
+
+        match command.as_str() {
+            "cpp" => { self.property.set_mode(GenType::CPP); },
+            "rust" => { self.property.set_mode(GenType::RUST); },
+            "go" => { self.property.set_mode(GenType::GO); },
+            "python" => { self.property.set_mode(GenType::PYTHON); },
+            "csharp" => { self.property.set_mode(GenType::CSHARP); },
+            _ => {println!("Unsupported type . . .");}
+        }
+
+    }
 
     pub fn parse(&mut self, argv: Vec<String>) {
         
@@ -136,6 +123,8 @@ impl GenPrompt {
     // use case :  qnerator -f ExampleMEssage.qsmb cpp Example
     // use case :  qnerator -d ExampleMEssages cpp Example
 
+    self.set_generate_mode_by_console_argv(argv[3].clone());
+
         match self.mode {
             MODE::FILE => {
                 // argv[1] : prompt mode
@@ -143,7 +132,7 @@ impl GenPrompt {
                 // argv[3] : generate language
                 // argv[3] : generate directory
                 let mut file_name = argv[2].clone();
-                // let mut 
+
 
                 let mut _parse_result = self.parse_file(file_name.clone());
             },

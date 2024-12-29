@@ -11,7 +11,8 @@ pub enum GenType {
     CPP,
     RUST,
     GO,
-    PYTHON
+    PYTHON,
+    CSHARP
 }
 
 #[derive(Clone)]
