@@ -100,15 +100,32 @@ pub trait CodeGenerator {
 
     }
 
-    fn change_file_format_by_gen_mode(&mut self, _file_name : String, _gen_mode : GenType) -> String {
-        return "".to_string()
+    fn change_file_format_by_gen_mode(&mut self, _file_name: String, _gen_mode: GenType) -> Option<String> {
+        // Split the file name by '.' and handle the case where no '.' exists
+        let mut parts = _file_name.rsplitn(2, '.'); // Split from the right, max 2 parts
+        let file_name = parts.next()?.to_string();
+        let _file_format = match _gen_mode {
+            GenType::CPP => ".cpp",
+            GenType::RUST => ".rs",
+            GenType::PYTHON => ".py",
+            GenType::CSHARP => ".cs",
+            GenType::GO => ".go",
+            _ => {
+                println!("Unsupported type . . .");
+                return None;
+            }
+        };
+    
+        Some(file_name + _file_format)
     }
 
     fn write(&mut self, _directory: String, _file_name: String, _source: String, _gen_mode : GenType) {
         println!("Code Generate . . . .");
-    
+        
+        let mut _generate_file_name = self.change_file_format_by_gen_mode(_file_name, _gen_mode);
+
         // Create the full path by combining directory and file path
-        let full_path = Path::new(&_directory).join(&_file_name);
+        let full_path = Path::new(&_directory).join(&_generate_file_name.unwrap());
     
         // Try to open the file for writing
         match File::create(&full_path) {
