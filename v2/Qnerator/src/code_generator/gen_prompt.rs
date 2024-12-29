@@ -99,7 +99,7 @@ impl GenPrompt {
             GenType::CPP => {
                 println!("checked cpp");
                 let mut generator = CPPGenerator::new();
-
+                self.property.set_mode(GenType::CPP);
 
                 generator.set_source(_source);
                 generator.parse();
@@ -114,6 +114,7 @@ impl GenPrompt {
             GenType::RUST  => {
                 println!("checked rust");
                 let mut generator = RustGenerator::new();
+                self.property.set_mode(GenType::RUST);
 
                 generator.set_source(_source);
                 generator.parse();
@@ -134,13 +135,26 @@ impl GenPrompt {
         
         match self.mode {
             MODE::FILE => {
-                let mut _parse_result = self.parse_file(argv[2].clone());
+
+                let mut file_name = argv[2].clone();
+
+                self.set_code_property(
+                    String::from("/generated"),
+                    file_name.clone(),
+                      GenType::NONE);
+
+                let mut _parse_result = self.parse_file(file_name.clone());
             },
             MODE::DIRECTORY => {
 
                 let mut _file_list = Self::find_file_from_directory(argv[2].clone());
 
                 for file in &_file_list {
+
+                    self.set_code_property(
+                        String::from("/generated"),
+                        file.clone(),
+                          GenType::NONE);
 
                     let mut _parse_result = self.parse_file(file.clone());
     
