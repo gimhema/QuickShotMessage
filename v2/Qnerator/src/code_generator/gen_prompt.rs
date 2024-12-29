@@ -11,9 +11,6 @@ use super::GenType;
 use super::CPPGenerator;
 use super::RustGenerator;
 
-// qnerator -f <FILE_NAME> <GENERATE_DIRECTORY>
-// qnerator -d <FILE_DIRECTORY> <GENERATE_DIRECTORY>
-
 pub enum MODE {
     DEFAULT,
     FILE,
@@ -92,14 +89,14 @@ impl GenPrompt {
         // 1. check file format
         // 2. decide parse mode 
         let mut _property_clone = self.get_property_clone();
-
+        let mut _generated_mode = self.get_property_clone().get_mode();
         let mut _source = file_name.clone();
 
-        match Self::check_lang_format(file_name) {
+        match _generated_mode {
             GenType::CPP => {
                 println!("checked cpp");
                 let mut generator = CPPGenerator::new();
-                self.property.set_mode(GenType::CPP);
+
 
                 generator.set_source(_source);
                 generator.parse();
@@ -114,7 +111,7 @@ impl GenPrompt {
             GenType::RUST  => {
                 println!("checked rust");
                 let mut generator = RustGenerator::new();
-                self.property.set_mode(GenType::RUST);
+
 
                 generator.set_source(_source);
                 generator.parse();
@@ -133,28 +130,32 @@ impl GenPrompt {
 
     pub fn parse(&mut self, argv: Vec<String>) {
         
+    // qnerator -f <FILE_NAME> <GENERATE_DIRECTORY>
+    // qnerator -d <FILE_DIRECTORY> <GENERATE_DIRECTORY>
+
+    // use case :  qnerator -f ExampleMEssage.qsmb cpp Example
+    // use case :  qnerator -d ExampleMEssages cpp Example
+
         match self.mode {
             MODE::FILE => {
-
+                // argv[1] : prompt mode
+                // argv[2] : file name
+                // argv[3] : generate language
+                // argv[3] : generate directory
                 let mut file_name = argv[2].clone();
-
-                self.set_code_property(
-                    String::from("/generated"),
-                    file_name.clone(),
-                      GenType::NONE);
+                // let mut 
 
                 let mut _parse_result = self.parse_file(file_name.clone());
             },
             MODE::DIRECTORY => {
-
+                // argv[1] : prompt mode
+                // argv[2] : target file directory name
+                // argv[3] : generate language
+                // argv[3] : generate directory
                 let mut _file_list = Self::find_file_from_directory(argv[2].clone());
 
                 for file in &_file_list {
 
-                    self.set_code_property(
-                        String::from("/generated"),
-                        file.clone(),
-                          GenType::NONE);
 
                     let mut _parse_result = self.parse_file(file.clone());
     
@@ -167,19 +168,14 @@ impl GenPrompt {
 
     }
 
-    pub fn set_code_property(&mut self,
-         generate_file_path : String,
-          generate_file_name : String,
-            gen_mode : GenType) {
 
-        self.property.set_directory(generate_file_path);
-        self.property.set_file_path(generate_file_name);
-        self.property.set_mode(gen_mode);
-    }
+
 
     pub fn run(&mut self, argv: Vec<String>) {
 
         self.mode = self.set_mode_by_prefix(argv[1].clone());
+
+
 
         match self.mode {
             MODE::DEFAULT => { self.print_help(); }
