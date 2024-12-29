@@ -156,8 +156,12 @@ impl CodeGenerator for RustGenerator {
         let mut _source = self.get_source();
         let mut _file_path = gen_property.get_file_path();
         let mut _directory = gen_property.get_directory();
+        let mut _gen_mode = gen_property.get_mode();
 
-        self.write(_directory, _file_path, _source);
+        self.write(_directory, 
+            _file_path, 
+            _source,
+            _gen_mode);
     }
 
     fn parse(&mut self) {

@@ -100,11 +100,15 @@ pub trait CodeGenerator {
 
     }
 
-    fn write(&mut self, _directory: String, _file_path: String, _source: String) {
+    fn change_file_format_by_gen_mode(&mut self, _file_name : String, _gen_mode : GenType) -> String {
+        return "".to_string()
+    }
+
+    fn write(&mut self, _directory: String, _file_name: String, _source: String, _gen_mode : GenType) {
         println!("Code Generate . . . .");
     
         // Create the full path by combining directory and file path
-        let full_path = Path::new(&_directory).join(&_file_path);
+        let full_path = Path::new(&_directory).join(&_file_name);
     
         // Try to open the file for writing
         match File::create(&full_path) {
