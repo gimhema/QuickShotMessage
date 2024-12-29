@@ -153,8 +153,14 @@ impl GenPrompt {
 
     }
 
-    pub fn set_code_property(&mut self, generate_file_path : String, generate_file_name : String) {
+    pub fn set_code_property(&mut self,
+         generate_file_path : String,
+          generate_file_name : String,
+            gen_mode : GenType) {
 
+        self.property.set_directory(generate_file_path);
+        self.property.set_file_path(generate_file_name);
+        self.property.set_mode(gen_mode);
     }
 
     pub fn run(&mut self, argv: Vec<String>) {
