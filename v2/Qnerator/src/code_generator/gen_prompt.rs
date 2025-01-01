@@ -116,9 +116,6 @@ impl GenPrompt {
     }
 
     pub fn parse(&mut self, argv: Vec<String>) {
-        
-    // qnerator -f <FILE_NAME> <GENERATE_DIRECTORY>
-    // qnerator -d <FILE_DIRECTORY> <GENERATE_DIRECTORY>
 
     // use case :  qnerator -f ExampleMEssage.qsmb cpp Example
     // use case :  qnerator -d ExampleMEssages cpp Example
@@ -127,20 +124,23 @@ impl GenPrompt {
 
         match self.mode {
             MODE::FILE => {
+                // [DEPRECATED].
                 // argv[1] : prompt mode
                 // argv[2] : file name
                 // argv[3] : generate language
                 // argv[4] : generate directory
-                let mut file_name = argv[2].clone();
-
-
-                let mut _parse_result = self.parse_file(file_name.clone());
+                // let mut file_name = argv[2].clone();
+                // let mut _parse_result = self.parse_file(file_name.clone());
             },
             MODE::DIRECTORY => {
+                // 
                 // argv[1] : prompt mode
-                // argv[2] : target file directory name
+                // argv[2] : target file directory
                 // argv[3] : generate language
                 // argv[4] : generate directory
+
+                // qnerator -d <TARGET_FILE_DIRECTORY> <GENERATE_LANGUAGE> <GENERATE_DIRECTORY>
+
                 let mut _file_list = Self::find_file_from_directory(argv[2].clone());
 
                 for file in &_file_list {

@@ -17,18 +17,23 @@ pub enum GenType {
 
 #[derive(Clone)]
 pub struct CodeGenProperty {
-    directory: String,
+    target_file_directory: String,
+    generate_directory: String,
     file_name: String,
     gen_mode: GenType
 }
 
 impl CodeGenProperty {
     pub fn new() -> Self {
-        return CodeGenProperty{directory : "".to_string(), file_name : "".to_string(), gen_mode : GenType::NONE}
+        return CodeGenProperty{
+            target_file_directory : "".to_string(),
+            generate_directory : "".to_string(),
+             file_name : "".to_string(),
+              gen_mode : GenType::NONE}
     }
 
-    pub fn get_directory(&mut self) -> String {
-        return self.directory.clone()
+    pub fn get_generate_directory(&mut self) -> String {
+        return self.generate_directory.clone()
     }
 
     pub fn get_file_name(&mut self) -> String {
@@ -39,8 +44,8 @@ impl CodeGenProperty {
         return self.gen_mode.clone()
     }
 
-    pub fn set_directory(&mut self, _direcotry : String) {
-        self.directory = _direcotry;
+    pub fn set_generate_directory(&mut self, _direcotry : String) {
+        self.generate_directory = _direcotry;
     }
 
     pub fn set_file_name(&mut self, _file_name : String) {
