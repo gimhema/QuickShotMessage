@@ -130,7 +130,7 @@ impl GenPrompt {
                 // argv[1] : prompt mode
                 // argv[2] : file name
                 // argv[3] : generate language
-                // argv[3] : generate directory
+                // argv[4] : generate directory
                 let mut file_name = argv[2].clone();
 
 
@@ -140,7 +140,7 @@ impl GenPrompt {
                 // argv[1] : prompt mode
                 // argv[2] : target file directory name
                 // argv[3] : generate language
-                // argv[3] : generate directory
+                // argv[4] : generate directory
                 let mut _file_list = Self::find_file_from_directory(argv[2].clone());
 
                 for file in &_file_list {

@@ -31,7 +31,7 @@ impl CodeGenProperty {
         return self.directory.clone()
     }
 
-    pub fn get_file_path(&mut self) -> String {
+    pub fn get_file_name(&mut self) -> String {
         return self.file_name.clone()
     }
 
@@ -43,7 +43,7 @@ impl CodeGenProperty {
         self.directory = _direcotry;
     }
 
-    pub fn set_file_path(&mut self, _file_name : String) {
+    pub fn set_file_name(&mut self, _file_name : String) {
         self.file_name = _file_name;
     }
 

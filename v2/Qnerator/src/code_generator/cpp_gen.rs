@@ -215,7 +215,7 @@ impl CodeGenerator for CPPGenerator {
     fn generate(&mut self, mut gen_property : CodeGenProperty) {
 
         let mut _source = self.get_source();
-        let mut _file_path = gen_property.get_file_path();
+        let mut _file_path = gen_property.get_file_name();
         let mut _directory = gen_property.get_directory();
         let mut _gen_mode = gen_property.get_mode();
 
