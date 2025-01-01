@@ -168,7 +168,7 @@ impl GenPrompt {
 
         match self.mode {
             MODE::DEFAULT => { self.print_help(); }
-            MODE::FILE => {self.parse(argv.clone());}
+//            MODE::FILE => {self.parse(argv.clone());}
             MODE::DIRECTORY => {self.parse(argv.clone());}
             _ => { self.print_help(); }
         }
