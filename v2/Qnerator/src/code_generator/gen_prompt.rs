@@ -121,6 +121,7 @@ impl GenPrompt {
     // use case :  qnerator -d ExampleMEssages cpp Example
 
     self.set_generate_mode_by_console_argv(argv[3].clone());
+    self.set_generate_directory_by_param(argv[4].clone());
 
         match self.mode {
             MODE::DIRECTORY => {
@@ -150,7 +151,13 @@ impl GenPrompt {
 
     }
 
-
+    pub fn set_generate_directory_by_param(&mut self, param : String) {
+        
+        match param.as_str() {
+            "-" => {self.property.set_generate_directory("/gen".to_string());}
+            _ => { self.property.set_generate_directory(param); }
+        }
+    }
 
 
     pub fn run(&mut self, argv: Vec<String>) {
