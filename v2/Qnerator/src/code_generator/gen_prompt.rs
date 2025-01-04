@@ -154,7 +154,7 @@ impl GenPrompt {
     pub fn set_generate_directory_by_param(&mut self, param : String) {
         
         match param.as_str() {
-            "-" => {self.property.set_generate_directory("/gen".to_string());}
+            "-" => {self.property.set_generate_directory("gen/".to_string());}
             _ => { self.property.set_generate_directory(param); }
         }
     }

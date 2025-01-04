@@ -238,7 +238,9 @@ impl CodeGenerator for CPPGenerator {
         println!("{}", cpp_code);
         
          */
+        let dir_name = self.
         let file_name = self.source.clone(); // source 값을 로컬 변수로 복사하여 빌림 해제
+
         let fields = read_parse_struct(self.source.clone());
         let cpp_code = self.format_cpp_code(&file_name, &fields);
     

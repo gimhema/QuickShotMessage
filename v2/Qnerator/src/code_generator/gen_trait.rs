@@ -66,11 +66,14 @@ impl CodeGenProperty {
 }
 
 
-pub fn read_parse_struct(file_name : String) -> Vec<(String, String)> {
+pub fn read_parse_struct(direcotry_name : String, file_name : String) -> Vec<(String, String)> {
+
+    let mut _read_file_dir = format!("{}{}", direcotry_name, file_name);
+    
     let mut fields = Vec::new();
         
         // 파일 열기
-        if let Ok(file) = File::open(&file_name) {
+        if let Ok(file) = File::open(&_read_file_dir) {
             let reader = BufReader::new(file);
     
             for line in reader.lines().flatten() {
