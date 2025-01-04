@@ -123,15 +123,6 @@ impl GenPrompt {
     self.set_generate_mode_by_console_argv(argv[3].clone());
 
         match self.mode {
-            MODE::FILE => {
-                // [DEPRECATED].
-                // argv[1] : prompt mode
-                // argv[2] : file name
-                // argv[3] : generate language
-                // argv[4] : generate directory
-                // let mut file_name = argv[2].clone();
-                // let mut _parse_result = self.parse_file(file_name.clone());
-            },
             MODE::DIRECTORY => {
                 // 
                 // argv[1] : prompt mode
@@ -140,6 +131,8 @@ impl GenPrompt {
                 // argv[4] : generate directory
 
                 // qnerator -d <TARGET_FILE_DIRECTORY> <GENERATE_LANGUAGE> <GENERATE_DIRECTORY>
+                // Example 1: qnerator -d /targets rust - => will generate /gen directory
+                // Example 2: qnerator -d /targets rust /custom => will generate /custom directory
 
                 let mut _file_list = Self::find_file_from_directory(argv[2].clone());
 
@@ -168,7 +161,6 @@ impl GenPrompt {
 
         match self.mode {
             MODE::DEFAULT => { self.print_help(); }
-//            MODE::FILE => {self.parse(argv.clone());}
             MODE::DIRECTORY => {self.parse(argv.clone());}
             _ => { self.print_help(); }
         }
