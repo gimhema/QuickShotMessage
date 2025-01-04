@@ -44,6 +44,14 @@ impl CodeGenProperty {
         return self.gen_mode.clone()
     }
 
+    pub fn get_target_file_directory(&mut self) -> String {
+        return self.target_file_directory.clone()
+    }
+
+    pub fn set_target_file_directory(&mut self, _directory: String) {
+        self.target_file_directory = _directory;
+    }
+
     pub fn set_generate_directory(&mut self, _direcotry : String) {
         self.generate_directory = _direcotry;
     }
