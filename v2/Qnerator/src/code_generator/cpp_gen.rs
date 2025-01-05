@@ -7,24 +7,26 @@ use std::io::{self, Write};
 use std::fs::File;
 use std::io::{BufRead, BufReader};
 use super::gen_trait::*;
-pub struct CPPGenerator {
-    source: String,
+
+pub struct CPPGenerator{
+//    source: String,
+    gen_property : GeneratorCommon
 }
 
 impl CPPGenerator {
     pub fn new() -> Self {
         CPPGenerator {
-            source: "".to_string(),
+            gen_property : GeneratorCommon::new()
         }
     }
 
-    pub fn set_source(&mut self,  _source: String) {
-        self.source = _source;
-    }
-
-    pub fn get_source(&mut self) -> String {
-        return self.source.clone()
-    }
+    // pub fn set_source(&mut self,  _source: String) {
+    //     self.source = _source;
+    // }
+// 
+    // pub fn get_source(&mut self) -> String {
+    //     return self.source.clone()
+    // }
 
     pub fn format_cpp_code(&mut self, struct_name: &str, fields: &[((String, String))]) -> String {
         let mut cpp_code = String::new();
@@ -239,9 +241,10 @@ impl CodeGenerator for CPPGenerator {
         
          */
         // let dir_name = self.
+        let directory_name = self.gen_property.get_generate_file_path();
         let file_name = self.source.clone(); // source 값을 로컬 변수로 복사하여 빌림 해제
 
-        let fields = read_parse_struct(self.source.clone());
+        let fields = read_parse_struct();
         let cpp_code = self.format_cpp_code(&file_name, &fields);
     
         // 생성된 C++ 코드를 확인
@@ -251,6 +254,6 @@ impl CodeGenerator for CPPGenerator {
 
 
     fn set_source(&mut self, _source : String) {
-        self.source = _source.clone();
+        self.gen_property.set_generate_source(_source);
     }
 }
