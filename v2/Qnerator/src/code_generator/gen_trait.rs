@@ -158,3 +158,33 @@ pub trait CodeGenerator {
         }
     }
 }
+
+#[derive(Clone)]
+pub struct GeneratorCommon{
+    read_file_path : String,
+    generate_file_path : String,
+    generate_source : String
+}
+
+impl GeneratorCommon {
+    
+    pub fn new() -> Self {
+        GeneratorCommon {
+            read_file_path : "".to_string(),
+            generate_file_path : "".to_string(),
+            generate_source : "".to_string()
+        }
+    }
+
+    pub fn set_read_file_path(&mut self, _path : String) {
+        self.read_file_path = _path;
+    }   
+
+    pub fn set_generate_file_path(&mut self, _path : String) {
+        self.generate_file_path = _path;
+    }
+
+    pub fn set_generate_source(&mut self, _src : String) {
+        self.generate_source = _src;
+    }
+}
