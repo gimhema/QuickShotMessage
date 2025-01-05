@@ -7,21 +7,24 @@ use std::io::{BufRead, BufReader};
 
 
 pub struct RustGenerator {
-    source : String
+//    source: String,
+    gen_property : GeneratorCommon
 }
 
 impl RustGenerator {
     pub fn new() -> Self {
-        return RustGenerator{source : "".to_string()}
+        return RustGenerator {
+            gen_property : GeneratorCommon::new()
+        }
     }
 
-    pub fn set_source(&mut self,  _source: String) {
-        self.source = _source;
-    }
-
-    pub fn get_source(&mut self) -> String {
-        return self.source.clone()
-    }
+    // pub fn set_source(&mut self,  _source: String) {
+    //     self.source = _source;
+    // }
+// 
+    // pub fn get_source(&mut self) -> String {
+    //     return self.source.clone()
+    // }
 
     pub fn format_rust_code(&mut self, file_name: String, fields: Vec<(String, String)>) -> String {
         // 구조체 이름 생성 (파일 이름에서 확장자를 제거하고 PascalCase로 변환)
@@ -153,7 +156,7 @@ impl RustGenerator {
 impl CodeGenerator for RustGenerator {
     fn generate(&mut self, mut gen_property : CodeGenProperty) {
 
-        let mut _source = self.get_source();
+        let mut _source = self.gen_property.get_generate_source();
         let mut _file_path = gen_property.get_file_name();
         let mut _directory = gen_property.get_generate_directory();
         let mut _gen_mode = gen_property.get_mode();
@@ -166,8 +169,13 @@ impl CodeGenerator for RustGenerator {
 
     fn parse(&mut self) {
 
-        let file_name = self.source.clone();
-        let fields = read_parse_struct(self.source.clone());
+
+        let directory_name = self.gen_property.get_generate_file_path().clone();
+        let file_name = self.gen_property.get_genrate_file_name().clone(); // source 값을 로컬 변수로 복사하여 빌림 해제
+
+
+        // let file_name = self.source.clone();
+        let fields = read_parse_struct(directory_name, file_name.clone());
         let rust_code = self.format_rust_code(file_name, fields);
         
         println!("{}", rust_code);

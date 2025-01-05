@@ -216,7 +216,7 @@ impl CPPGenerator {
 impl CodeGenerator for CPPGenerator {
     fn generate(&mut self, mut gen_property : CodeGenProperty) {
 
-        let mut _source = self.get_source();
+        let mut _source = self.gen_property.get_generate_source();
         let mut _file_path = gen_property.get_file_name();
         let mut _directory = gen_property.get_generate_directory();
         let mut _gen_mode = gen_property.get_mode();
@@ -241,10 +241,10 @@ impl CodeGenerator for CPPGenerator {
         
          */
         // let dir_name = self.
-        let directory_name = self.gen_property.get_generate_file_path();
-        let file_name = self.source.clone(); // source 값을 로컬 변수로 복사하여 빌림 해제
+        let directory_name = self.gen_property.get_generate_file_path().clone();
+        let file_name = self.gen_property.get_genrate_file_name().clone(); // source 값을 로컬 변수로 복사하여 빌림 해제
 
-        let fields = read_parse_struct();
+        let fields = read_parse_struct(directory_name, file_name.clone());
         let cpp_code = self.format_cpp_code(&file_name, &fields);
     
         // 생성된 C++ 코드를 확인
