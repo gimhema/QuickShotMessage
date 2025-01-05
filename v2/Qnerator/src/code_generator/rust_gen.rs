@@ -7,7 +7,6 @@ use std::io::{BufRead, BufReader};
 
 
 pub struct RustGenerator {
-//    source: String,
     gen_property : GeneratorCommon
 }
 
@@ -17,14 +16,6 @@ impl RustGenerator {
             gen_property : GeneratorCommon::new()
         }
     }
-
-    // pub fn set_source(&mut self,  _source: String) {
-    //     self.source = _source;
-    // }
-// 
-    // pub fn get_source(&mut self) -> String {
-    //     return self.source.clone()
-    // }
 
     pub fn format_rust_code(&mut self, file_name: String, fields: Vec<(String, String)>) -> String {
         // 구조체 이름 생성 (파일 이름에서 확장자를 제거하고 PascalCase로 변환)
@@ -179,6 +170,7 @@ impl CodeGenerator for RustGenerator {
         let rust_code = self.format_rust_code(file_name, fields);
         
         println!("{}", rust_code);
+        self.gen_property.set_generate_source(rust_code);
     }
 
 }

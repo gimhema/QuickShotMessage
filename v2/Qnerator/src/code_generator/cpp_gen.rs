@@ -9,7 +9,6 @@ use std::io::{BufRead, BufReader};
 use super::gen_trait::*;
 
 pub struct CPPGenerator{
-//    source: String,
     gen_property : GeneratorCommon
 }
 
@@ -19,14 +18,6 @@ impl CPPGenerator {
             gen_property : GeneratorCommon::new()
         }
     }
-
-    // pub fn set_source(&mut self,  _source: String) {
-    //     self.source = _source;
-    // }
-// 
-    // pub fn get_source(&mut self) -> String {
-    //     return self.source.clone()
-    // }
 
     pub fn format_cpp_code(&mut self, struct_name: &str, fields: &[((String, String))]) -> String {
         let mut cpp_code = String::new();
@@ -249,11 +240,11 @@ impl CodeGenerator for CPPGenerator {
     
         // 생성된 C++ 코드를 확인
         println!("{}", cpp_code);
-    
+        self.gen_property.set_generate_source(cpp_code);
     }
 
 
-    fn set_source(&mut self, _source : String) {
-        self.gen_property.set_generate_source(_source);
-    }
+    // fn set_source(&mut self, _source : String) {
+    //     self.gen_property.set_generate_source(_source);
+    // }
 }
