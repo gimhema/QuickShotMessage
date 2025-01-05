@@ -161,13 +161,12 @@ impl CodeGenerator for RustGenerator {
     fn parse(&mut self) {
 
 
-        let directory_name = self.gen_property.get_generate_file_path().clone();
+        let directory_name = self.gen_property.get_read_file_path().clone();
         let file_name = self.gen_property.get_genrate_file_name().clone(); // source 값을 로컬 변수로 복사하여 빌림 해제
+        let _fileds_name = Self::get_first_part(file_name.as_str());
 
-
-        // let file_name = self.source.clone();
         let fields = read_parse_struct(directory_name, file_name.clone());
-        let rust_code = self.format_rust_code(file_name, fields);
+        let rust_code = self.format_rust_code(_fileds_name.to_string(), fields);
         
         println!("{}", rust_code);
         self.gen_property.set_generate_source(rust_code);

@@ -157,6 +157,10 @@ pub trait CodeGenerator {
             }
         }
     }
+
+    fn get_first_part(input: &str) -> &str {
+        input.split('.').next().unwrap_or("")
+    }
 }
 
 #[derive(Clone)]
@@ -195,7 +199,7 @@ impl GeneratorCommon {
     }
 
     pub fn get_genrate_file_name(&mut self) -> String {
-        return self.genrate_file_name.clone()
+        return self.read_file_path.clone()
     }
 
     pub fn get_read_file_path(&mut self) -> String {

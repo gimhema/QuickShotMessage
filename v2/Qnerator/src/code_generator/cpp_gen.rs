@@ -219,26 +219,17 @@ impl CodeGenerator for CPPGenerator {
     }
 
     fn parse(&mut self) {
-        // Implementation of parse method
 
-        /*
-
-        let cpp_generator = CPPGenerator::new();
-
-        // C++ 코드 생성
-        let cpp_code = cpp_generator.format_cpp_code("MyStruct", &fields);
-
-        println!("{}", cpp_code);
-        
-         */
-        // let dir_name = self.
-        let directory_name = self.gen_property.get_generate_file_path().clone();
+        let directory_name = self.gen_property.get_read_file_path().clone();
         let file_name = self.gen_property.get_genrate_file_name().clone(); // source 값을 로컬 변수로 복사하여 빌림 해제
 
+        let _fileds_name = Self::get_first_part(file_name.as_str());
+
         let fields = read_parse_struct(directory_name, file_name.clone());
-        let cpp_code = self.format_cpp_code(&file_name, &fields);
+
+        let cpp_code = self.format_cpp_code(&_fileds_name, &fields);
     
-        // 생성된 C++ 코드를 확인
+
         println!("{}", cpp_code);
         self.gen_property.set_generate_source(cpp_code);
     }
