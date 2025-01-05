@@ -65,15 +65,14 @@ impl GenPrompt {
         // 2. decide parse mode 
         let mut _property_clone = self.get_property_clone();
         let mut _generated_mode = self.get_property_clone().get_mode();
-        let mut _source = file_name.clone();
 
         match _generated_mode {
             GenType::CPP => {
                 println!("checked cpp");
                 let mut generator = CPPGenerator::new();
 
+                
 
-                generator.set_source(_source);
                 generator.parse();
                 generator.generate(_property_clone);
             }
@@ -88,7 +87,7 @@ impl GenPrompt {
                 let mut generator = RustGenerator::new();
 
 
-                generator.set_source(_source);
+                // generator.set_source(_source);
                 generator.parse();
                 generator.generate(_property_clone);
             }

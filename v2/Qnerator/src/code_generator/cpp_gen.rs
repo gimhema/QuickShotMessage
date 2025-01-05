@@ -234,8 +234,4 @@ impl CodeGenerator for CPPGenerator {
         self.gen_property.set_generate_source(cpp_code);
     }
 
-
-    // fn set_source(&mut self, _source : String) {
-    //     self.gen_property.set_generate_source(_source);
-    // }
 }

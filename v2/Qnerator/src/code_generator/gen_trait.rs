@@ -112,7 +112,7 @@ pub trait CodeGenerator {
 
     }
 
-    fn set_source(&mut self, _source : String) {
+    fn init_code_generator(&mut self, _source : String) {
 
     }
 
