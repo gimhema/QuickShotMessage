@@ -1,16 +1,23 @@
+use std::sync::{RwLock, Arc};
+use lazy_static::lazy_static;
 
-
-
-
+lazy_static! {
+    static ref INSTANCE: Arc<RwLock<CodeGenOptionManager>> = Arc::new(RwLock::new(CodeGenOptionManager::new()));
+}
 
 pub struct CodeGenOptionManager {
-
+    
+    gen_option : CodeGenProperty
 
 }
 
 impl CodeGenOptionManager {
     pub fn new() -> Self {
         return CodeGenOptionManager::new()   
+    }
+
+    pub fn get_instance() -> &'static Arc<RwLock<CodeGenOptionManager>> {
+        &INSTANCE
     }
 }
 
