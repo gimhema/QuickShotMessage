@@ -9,13 +9,13 @@ use std::io::{BufRead, BufReader};
 use super::gen_trait::*;
 
 pub struct CPPGenerator{
-    gen_property : GeneratorCommon
+    gen_common : GeneratorCommon
 }
 
 impl CPPGenerator {
     pub fn new() -> Self {
         CPPGenerator {
-            gen_property : GeneratorCommon::new()
+            gen_common : GeneratorCommon::new()
         }
     }
 
@@ -207,10 +207,13 @@ impl CPPGenerator {
 impl CodeGenerator for CPPGenerator {
     fn generate(&mut self, mut gen_property : CodeGenProperty) {
 
-        let mut _source = self.gen_property.get_generate_source();
-        let mut _file_path = gen_property.get_file_name();
-        let mut _directory = gen_property.get_generate_directory();
-        let mut _gen_mode = gen_property.get_mode();
+        let mut _source = self.gen_common.get_generate_source();
+        let mut _file_path = self.gen_common.get_genrate_file_name();
+        let mut _directory = self.gen_common.get_generate_file_path();
+        
+        // let mut _file_path = gen_property.get_file_name();
+        // let mut _directory = gen_property.get_generate_directory();
+        // let mut _gen_mode = gen_property.get_mode();
 
         self.write(_directory, 
             _file_path, 
@@ -220,8 +223,8 @@ impl CodeGenerator for CPPGenerator {
 
     fn parse(&mut self) {
 
-        let directory_name = self.gen_property.get_read_file_path().clone();
-        let file_name = self.gen_property.get_genrate_file_name().clone(); // source 값을 로컬 변수로 복사하여 빌림 해제
+        let directory_name = self.gen_common.get_read_file_path().clone();
+        let file_name = self.gen_common.get_genrate_file_name().clone(); // source 값을 로컬 변수로 복사하여 빌림 해제
 
         let _fileds_name = Self::get_first_part(file_name.as_str());
 
@@ -231,7 +234,7 @@ impl CodeGenerator for CPPGenerator {
     
 
         println!("{}", cpp_code);
-        self.gen_property.set_generate_source(cpp_code);
+        self.gen_common.set_generate_source(cpp_code);
     }
 
 }
