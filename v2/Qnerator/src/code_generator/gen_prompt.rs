@@ -18,17 +18,12 @@ pub enum MODE {
 }
 
 pub struct GenPrompt {
-    property: CodeGenProperty,
     mode : MODE
 }
 
 impl GenPrompt {
     pub fn new() -> Self {
-        return GenPrompt{property : CodeGenProperty::new(), mode : MODE::DEFAULT}
-    }
-
-    pub fn get_property_clone(&mut self) -> CodeGenProperty {
-        return self.property.clone()
+        return GenPrompt{mode : MODE::DEFAULT}
     }
 
     fn get_first_word<'a>(&mut self, s: &'a str) -> &'a str {

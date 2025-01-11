@@ -9,14 +9,12 @@ use std::io::{BufRead, BufReader};
 use super::gen_trait::*;
 
 pub struct CPPGenerator{
-    gen_common : GeneratorCommon
+
 }
 
 impl CPPGenerator {
     pub fn new() -> Self {
-        CPPGenerator {
-            gen_common : GeneratorCommon::new()
-        }
+        return CPPGenerator::new()
     }
 
     pub fn format_cpp_code(&mut self, struct_name: &str, fields: &[((String, String))]) -> String {

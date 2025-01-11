@@ -7,14 +7,12 @@ use std::io::{BufRead, BufReader};
 
 
 pub struct RustGenerator {
-    gen_property : GeneratorCommon
+
 }
 
 impl RustGenerator {
     pub fn new() -> Self {
-        return RustGenerator {
-            gen_property : GeneratorCommon::new()
-        }
+        return RustGenerator::new()
     }
 
     pub fn format_rust_code(&mut self, file_name: String, fields: Vec<(String, String)>) -> String {

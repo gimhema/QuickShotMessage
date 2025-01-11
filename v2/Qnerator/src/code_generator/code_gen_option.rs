@@ -6,7 +6,7 @@ lazy_static! {
 }
 
 pub struct CodeGenOptionManager {
-    
+
     gen_option : CodeGenProperty
 
 }
