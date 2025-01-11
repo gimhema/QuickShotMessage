@@ -163,54 +163,54 @@ pub trait CodeGenerator {
     }
 }
 
-#[derive(Clone)]
-pub struct GeneratorCommon{
-    read_file_path : String,
-    generate_file_path : String,
-    genrate_file_name : String,
-    generate_source : String
-}
+// #[derive(Clone)]
+// pub struct GeneratorCommon{
+//     read_file_path : String,
+//     generate_file_path : String,
+//     genrate_file_name : String,
+//     generate_source : String
+// }
 
-impl GeneratorCommon {
+// impl GeneratorCommon {
     
-    pub fn new() -> Self {
-        GeneratorCommon {
-            read_file_path : "".to_string(),
-            generate_file_path : "".to_string(),
-            genrate_file_name : "".to_string(),
-            generate_source : "".to_string()
-        }
-    }
+//     pub fn new() -> Self {
+//         GeneratorCommon {
+//             read_file_path : "".to_string(),
+//             generate_file_path : "".to_string(),
+//             genrate_file_name : "".to_string(),
+//             generate_source : "".to_string()
+//         }
+//     }
 
-    pub fn set_read_file_path(&mut self, _path : String) {
-        self.read_file_path = _path;
-    }   
+//     pub fn set_read_file_path(&mut self, _path : String) {
+//         self.read_file_path = _path;
+//     }   
 
-    pub fn set_generate_file_path(&mut self, _path : String) {
-        self.generate_file_path = _path;
-    }
+//     pub fn set_generate_file_path(&mut self, _path : String) {
+//         self.generate_file_path = _path;
+//     }
 
-    pub fn set_generate_source(&mut self, _src : String) {
-        self.generate_source = _src;
-    }
+//     pub fn set_generate_source(&mut self, _src : String) {
+//         self.generate_source = _src;
+//     }
 
-    pub fn set_genrate_file_name(&mut self, _name : String) {
-        self.genrate_file_name = _name;
-    }
+//     pub fn set_genrate_file_name(&mut self, _name : String) {
+//         self.genrate_file_name = _name;
+//     }
 
-    pub fn get_genrate_file_name(&mut self) -> String {
-        return self.read_file_path.clone()
-    }
+//     pub fn get_genrate_file_name(&mut self) -> String {
+//         return self.read_file_path.clone()
+//     }
 
-    pub fn get_read_file_path(&mut self) -> String {
-        return self.read_file_path.clone()
-    }   
+//     pub fn get_read_file_path(&mut self) -> String {
+//         return self.read_file_path.clone()
+//     }   
 
-    pub fn get_generate_file_path(&mut self) -> String {
-        return self.generate_file_path.clone()
-    }
+//     pub fn get_generate_file_path(&mut self) -> String {
+//         return self.generate_file_path.clone()
+//     }
 
-    pub fn get_generate_source(&mut self) -> String {
-        return self.generate_source.clone()
-    }
-}
+//     pub fn get_generate_source(&mut self) -> String {
+//         return self.generate_source.clone()
+//     }
+// }
