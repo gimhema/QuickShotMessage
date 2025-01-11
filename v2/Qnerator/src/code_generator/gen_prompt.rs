@@ -101,7 +101,7 @@ impl GenPrompt {
         return "".to_string()
     }
 
-    pub fn set_generate_mode_by_console_argv(&mut self, command : String) {
+    pub fn set_generate_lanugage_by_console_argv(&mut self, command : String) {
 
         match command.as_str() {
             "cpp" => { self.property.set_mode(GenType::CPP); },
@@ -119,7 +119,7 @@ impl GenPrompt {
     // use case :  qnerator -f ExampleMEssage.qsmb cpp Example
     // use case :  qnerator -d ExampleMEssages cpp Example
 
-    self.set_generate_mode_by_console_argv(argv[3].clone());
+    self.set_generate_lanugage_by_console_argv(argv[3].clone());
     self.set_generate_directory_by_param(argv[4].clone());
 
         match self.mode {
