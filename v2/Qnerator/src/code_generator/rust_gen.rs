@@ -145,7 +145,7 @@ impl RustGenerator {
 
 
 impl CodeGenerator for RustGenerator {
-    fn generate(&mut self, mut gen_property : CodeGenProperty) {
+    fn generate(&mut self) {
 
         let mut _source = CodeGenOptionManager::get_generated_source_code();
         let mut _file_path = CodeGenOptionManager::get_file_name();

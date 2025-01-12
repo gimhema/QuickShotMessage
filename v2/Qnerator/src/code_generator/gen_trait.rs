@@ -50,7 +50,7 @@ pub trait CodeGenerator {
 
     }
     
-    fn generate(&mut self, gen_property :  CodeGenProperty) {
+    fn generate(&mut self) {
 
     }
 
