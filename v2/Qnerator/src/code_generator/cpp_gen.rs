@@ -1,6 +1,8 @@
 use crate::code_generator::read_parse_struct;
 
 use super::CodeGenerator;
+use super::code_gen_option::*;
+
 use std::fs;
 use std::io::{self, Write};
 
@@ -205,13 +207,14 @@ impl CPPGenerator {
 impl CodeGenerator for CPPGenerator {
     fn generate(&mut self, mut gen_property : CodeGenProperty) {
 
-        let mut _source = self.gen_common.get_generate_source();
-        let mut _file_path = self.gen_common.get_genrate_file_name();
-        let mut _directory = self.gen_common.get_generate_file_path();
+        // let mut _source = self.gen_common.get_generate_source();
+        // let mut _file_path = self.gen_common.get_genrate_file_name();
+        // let mut _directory = self.gen_common.get_generate_file_path();
         
-        // let mut _file_path = gen_property.get_file_name();
-        // let mut _directory = gen_property.get_generate_directory();
-        // let mut _gen_mode = gen_property.get_mode();
+        let mut _source = CodeGenOptionManager::get_generated_source_code();
+        let mut _file_path = CodeGenOptionManager::get_file_name();
+        let mut _directory = CodeGenOptionManager::get_generate_directory();
+        let mut _gen_mode = CodeGenOptionManager::get_gen_laungauge_mode();
 
         self.write(_directory, 
             _file_path, 
@@ -221,18 +224,22 @@ impl CodeGenerator for CPPGenerator {
 
     fn parse(&mut self) {
 
-        let directory_name = self.gen_common.get_read_file_path().clone();
-        let file_name = self.gen_common.get_genrate_file_name().clone(); // source 값을 로컬 변수로 복사하여 빌림 해제
+        // let directory_name = self.gen_common.get_read_file_path().clone();
+        let directory_name = CodeGenOptionManager::get_target_file_directory();
 
-        let _fileds_name = Self::get_first_part(file_name.as_str());
+//      let file_name = self.gen_common.get_genrate_file_name().clone(); // source 값을 로컬 변수로 복사하여 빌림 해제
+        let mut _file_path = CodeGenOptionManager::get_file_name();
 
-        let fields = read_parse_struct(directory_name, file_name.clone());
+        let _fileds_name = Self::get_first_part(_file_path.as_str());
+
+        let fields = read_parse_struct(directory_name, _file_path.clone());
 
         let cpp_code = self.format_cpp_code(&_fileds_name, &fields);
     
 
         println!("{}", cpp_code);
-        self.gen_common.set_generate_source(cpp_code);
+        // self.gen_common.set_generate_source(cpp_code);
+        CodeGenOptionManager::set_generated_source_code(cpp_code);
     }
 
 }
