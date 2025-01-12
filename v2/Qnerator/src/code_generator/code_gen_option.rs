@@ -19,6 +19,51 @@ impl CodeGenOptionManager {
     pub fn get_instance() -> &'static Arc<RwLock<CodeGenOptionManager>> {
         &INSTANCE
     }
+
+    pub fn get_target_file_directory() -> String {
+        let mut _inst = CodeGenOptionManager::get_instance().write().unwrap();
+        let mut _ret = _inst.gen_option.get_target_file_directory();
+        return _ret
+    }
+
+    pub fn set_target_file_direcotry(_directory : String) {
+        let mut _inst = CodeGenOptionManager::get_instance().write().unwrap();
+        _inst.gen_option.set_target_file_directory(_directory.clone());
+    }
+
+    pub fn get_generate_directory() -> String {
+        let mut _inst = CodeGenOptionManager::get_instance().write().unwrap();
+        let mut _ret = _inst.gen_option.get_generate_directory();
+        return _ret
+    }
+
+    pub fn set_generate_direcotry(_directory : String) {
+        let mut _inst = CodeGenOptionManager::get_instance().write().unwrap();
+        _inst.gen_option.set_generate_directory(_directory.clone());
+    }
+
+    pub fn get_file_name() -> String {
+        let mut _inst = CodeGenOptionManager::get_instance().write().unwrap();
+        let mut _ret = _inst.gen_option.get_file_name();
+        return _ret
+    }
+
+    pub fn set_file_name(_file_name : String) {
+        let mut _inst = CodeGenOptionManager::get_instance().write().unwrap();
+        _inst.gen_option.set_file_name(_file_name.clone());
+    }
+
+    pub fn get_gen_laungauge_mode() -> GenType {
+        let mut _inst = CodeGenOptionManager::get_instance().write().unwrap();
+        let mut _ret = _inst.gen_option.get_mode();
+        return _ret
+    }
+
+    pub fn set_gen_laungauge_mode(_type : GenType) {
+        let mut _inst = CodeGenOptionManager::get_instance().write().unwrap();
+        _inst.gen_option.set_mode(_type.clone());
+    }
+
 }
 
 
