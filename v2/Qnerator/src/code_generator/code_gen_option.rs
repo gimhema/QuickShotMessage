@@ -64,6 +64,17 @@ impl CodeGenOptionManager {
         _inst.gen_option.set_mode(_type.clone());
     }
 
+    pub fn get_generated_source_code() -> String {
+        let mut _inst = CodeGenOptionManager::get_instance().write().unwrap();
+        let mut _ret = _inst.gen_option.get_generated_source_code();
+        return _ret
+    }
+
+    pub fn set_generated_source_code(_src : String) {
+        let mut _inst = CodeGenOptionManager::get_instance().write().unwrap();
+        _inst.gen_option.set_generated_source_code(_src.clone());
+    }
+
 }
 
 
@@ -82,7 +93,8 @@ pub struct CodeGenProperty {
     target_file_directory: String,
     generate_directory: String,
     file_name: String,
-    gen_mode: GenType
+    gen_mode: GenType,
+    generated_source_code : String
 }
 
 impl CodeGenProperty {
@@ -91,7 +103,9 @@ impl CodeGenProperty {
             target_file_directory : "".to_string(),
             generate_directory : "".to_string(),
              file_name : "".to_string(),
-              gen_mode : GenType::NONE}
+              gen_mode : GenType::NONE,
+              generated_source_code : "".to_string()
+            }
     }
 
     pub fn get_generate_directory(&mut self) -> String {
@@ -110,6 +124,14 @@ impl CodeGenProperty {
         return self.target_file_directory.clone()
     }
 
+    pub fn get_generated_source_code(&mut self) -> String {
+        return self.generated_source_code.clone()
+    }
+
+    pub fn set_generated_source_code(&mut self, _src: String) {
+        self.generated_source_code = _src;
+    }
+
     pub fn set_target_file_directory(&mut self, _directory: String) {
         self.target_file_directory = _directory;
     }
@@ -125,4 +147,6 @@ impl CodeGenProperty {
     pub fn set_mode(&mut self, _type : GenType) {
         self.gen_mode = _type;
     }
+
+
 }

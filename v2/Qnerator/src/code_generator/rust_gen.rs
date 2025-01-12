@@ -5,6 +5,8 @@ use super::gen_trait::*;
 use std::fs::File;
 use std::io::{BufRead, BufReader};
 
+use super::code_gen_option::*;
+
 
 pub struct RustGenerator {
 
@@ -145,10 +147,10 @@ impl RustGenerator {
 impl CodeGenerator for RustGenerator {
     fn generate(&mut self, mut gen_property : CodeGenProperty) {
 
-        let mut _source = self.gen_property.get_generate_source();
-        let mut _file_path = gen_property.get_file_name();
-        let mut _directory = gen_property.get_generate_directory();
-        let mut _gen_mode = gen_property.get_mode();
+        let mut _source = CodeGenOptionManager::get_generated_source_code();
+        let mut _file_path = CodeGenOptionManager::get_file_name();
+        let mut _directory = CodeGenOptionManager::get_generate_directory();
+        let mut _gen_mode = CodeGenOptionManager::get_gen_laungauge_mode();
 
         self.write(_directory, 
             _file_path, 
@@ -159,7 +161,8 @@ impl CodeGenerator for RustGenerator {
     fn parse(&mut self) {
 
 
-        let directory_name = self.gen_property.get_read_file_path().clone();
+//        let directory_name = self.gen_property.get_read_file_path().clone();
+        let directory_name = CodeGenOptionManager::get_target_file_directory();
         let file_name = self.gen_property.get_genrate_file_name().clone(); // source 값을 로컬 변수로 복사하여 빌림 해제
         let _fileds_name = Self::get_first_part(file_name.as_str());
 
