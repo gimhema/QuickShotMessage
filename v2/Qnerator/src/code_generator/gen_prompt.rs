@@ -111,14 +111,15 @@ impl GenPrompt {
             },
             _ => {println!("Unsupported type . . .");}
         }
-
     }
+
 
     pub fn parse(&mut self, argv: Vec<String>) {
 
     // use case :  qnerator -f ExampleMEssage.qsmb cpp Example
     // use case :  qnerator -d ExampleMEssages cpp Example
 
+    
     self.set_generate_lanugage_by_console_argv(argv[3].clone());
     self.set_generate_directory_by_param(argv[4].clone());
 
@@ -133,7 +134,7 @@ impl GenPrompt {
                 // qnerator -d <TARGET_FILE_DIRECTORY> <GENERATE_LANGUAGE> <GENERATE_DIRECTORY>
                 // Example 1: qnerator -d /targets rust - => will generate /gen directory
                 // Example 2: qnerator -d /targets rust /custom => will generate /custom directory
-
+                CodeGenOptionManager::set_target_file_direcotry(argv[2].clone());
                 let mut _file_list = Self::find_file_from_directory(argv[2].clone());
 
                 for file_name in &_file_list {
