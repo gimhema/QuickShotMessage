@@ -53,14 +53,12 @@ impl GenPrompt {
         return result.clone()
     }
 
-    pub fn parse_file(&mut self, file_name : String) -> String {
+    pub fn parse_file(&mut self) -> String {
 
         // 1. check file format
         // 2. decide parse mode 
-        let mut _generated_mode = CodeGenOptionManager::get_gen_laungauge_mode();
 
-
-        match _generated_mode {
+        match CodeGenOptionManager::get_gen_laungauge_mode() {
             GenType::CPP => {
                 println!("checked cpp");
                 let mut generator = CPPGenerator::new();
@@ -140,7 +138,8 @@ impl GenPrompt {
                 for file_name in &_file_list {
 
 
-                    let mut _parse_result = self.parse_file(file_name.clone());
+                    CodeGenOptionManager::set_file_name(file_name.clone());
+                    let mut _parse_result = self.parse_file();
     
                 }
 
