@@ -1,6 +1,5 @@
-
-
 use super::gen_trait::*;
+use super::code_gen_option::*;
 
 use std::fs::{File, OpenOptions};
 use std::io::{self, Write, Read};
