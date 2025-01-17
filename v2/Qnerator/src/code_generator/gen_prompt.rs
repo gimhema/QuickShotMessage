@@ -57,18 +57,16 @@ impl GenPrompt {
 
         // 1. check file format
         // 2. decide parse mode 
-        let mut _property_clone = self.get_property_clone();
-        let mut _generated_mode = self.get_property_clone().get_mode();
+        let mut _generated_mode = CodeGenOptionManager::get_gen_laungauge_mode();
+
 
         match _generated_mode {
             GenType::CPP => {
                 println!("checked cpp");
                 let mut generator = CPPGenerator::new();
 
-                
-
                 generator.parse();
-                generator.generate(_property_clone);
+                generator.generate();
             }
             GenType::GO  => {
                 println!("checked go");
@@ -80,10 +78,8 @@ impl GenPrompt {
                 println!("checked rust");
                 let mut generator = RustGenerator::new();
 
-
-                // generator.set_source(_source);
                 generator.parse();
-                generator.generate(_property_clone);
+                generator.generate();
             }
             GenType::NONE  => {
                 println!("unexpected format . . .");
