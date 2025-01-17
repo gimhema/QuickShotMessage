@@ -94,11 +94,21 @@ impl GenPrompt {
     pub fn set_generate_lanugage_by_console_argv(&mut self, command : String) {
 
         match command.as_str() {
-            "cpp" => { self.property.set_mode(GenType::CPP); },
-            "rust" => { self.property.set_mode(GenType::RUST); },
-            "go" => { self.property.set_mode(GenType::GO); },
-            "python" => { self.property.set_mode(GenType::PYTHON); },
-            "csharp" => { self.property.set_mode(GenType::CSHARP); },
+            "cpp" => {
+                CodeGenOptionManager::set_gen_laungauge_mode(GenType::CPP);
+            },
+            "rust" => { 
+                CodeGenOptionManager::set_gen_laungauge_mode(GenType::RUST);
+            },
+            "go" => { 
+                CodeGenOptionManager::set_gen_laungauge_mode(GenType::GO);
+            },
+            "python" => { 
+                CodeGenOptionManager::set_gen_laungauge_mode(GenType::PYTHON);
+            },
+            "csharp" => { 
+                CodeGenOptionManager::set_gen_laungauge_mode(GenType::CSHARP);
+            },
             _ => {println!("Unsupported type . . .");}
         }
 
@@ -143,8 +153,12 @@ impl GenPrompt {
     pub fn set_generate_directory_by_param(&mut self, param : String) {
         
         match param.as_str() {
-            "-" => {self.property.set_generate_directory("gen/".to_string());}
-            _ => { self.property.set_generate_directory(param); }
+            "-" => {
+                CodeGenOptionManager::set_generate_direcotry("gen/".to_string());
+            }
+            _ => { 
+                CodeGenOptionManager::set_generate_direcotry(param);
+            }
         }
     }
 
