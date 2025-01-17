@@ -136,10 +136,10 @@ impl GenPrompt {
 
                 let mut _file_list = Self::find_file_from_directory(argv[2].clone());
 
-                for file in &_file_list {
+                for file_name in &_file_list {
 
 
-                    let mut _parse_result = self.parse_file(file.clone());
+                    let mut _parse_result = self.parse_file(file_name.clone());
     
                 }
 
