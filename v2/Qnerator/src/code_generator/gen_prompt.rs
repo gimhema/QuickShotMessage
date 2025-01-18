@@ -5,6 +5,9 @@ use std::fs::{File, OpenOptions};
 use std::io::{self, Write, Read};
 use std::path::Path;
 
+use std::fs;
+
+
 use super::GenType;
 
 use super::CPPGenerator;
@@ -46,11 +49,31 @@ impl GenPrompt {
         println!("===============================");
     }
 
-    pub fn find_file_from_directory(directroy : String) -> Vec<String> {
+    pub fn find_file_from_directory(directory : String) -> Result<Vec<String>, io::Error> {
         let mut result = Vec::new();
 
+        // 디렉토리 읽기
+        let entries = fs::read_dir(directory)?;
 
-        return result.clone()
+        for entry in entries {
+            let entry = entry?;
+            let path = entry.path();
+
+            // 파일인지 확인하고 ".qsmb" 확장자 확인
+            if path.is_file() {
+                if let Some(extension) = path.extension() {
+                    if extension == "qsmb" {
+                        if let Some(file_name) = path.file_name() {
+                            if let Some(file_name_str) = file_name.to_str() {
+                                result.push(file_name_str.to_string());
+                            }
+                        }
+                    }
+                }
+            }
+        }
+
+        Ok(result)
     }
 
     pub fn parse_file(&mut self) -> String {
@@ -133,16 +156,25 @@ impl GenPrompt {
                 // Example 1: qnerator -d /targets rust - => will generate /gen directory
                 // Example 2: qnerator -d /targets rust /custom => will generate /custom directory
                 CodeGenOptionManager::set_target_file_direcotry(argv[2].clone());
-                let mut _file_list = Self::find_file_from_directory(argv[2].clone());
 
-                for file_name in &_file_list {
+                let directory = argv[2].clone();
 
-
-                    CodeGenOptionManager::set_file_name(file_name.clone());
-                    let mut _parse_result = self.parse_file();
-    
+                // 함수 호출 및 Vec 순회
+                match Self::find_file_from_directory(directory) {
+                    Ok(files) => {
+                        if files.is_empty() {
+                            println!("No .qsmb files found in the directory.");
+                        } else {
+                            println!("Found .qsmb files:");
+                            for file in files {
+                                println!("Start Parse {}", file);
+                                CodeGenOptionManager::set_file_name(file);
+                                let mut _parse_result = self.parse_file();
+                            }
+                        }
+                    }
+                    Err(e) => eprintln!("Error reading directory: {}", e),
                 }
-
             
             },
             _ => {println!("Unexpected action . . . .");}
