@@ -15,7 +15,7 @@ use super::RustGenerator;
 
 pub enum MODE {
     DEFAULT,
-    FILE,
+    TEST,
     DIRECTORY
 }
 
@@ -36,7 +36,7 @@ impl GenPrompt {
         let first_word = self.get_first_word(&argv);
 
         match first_word.to_lowercase().as_str() {
-            "-f" => MODE::FILE,
+            "-t" => MODE::TEST,
             "-d" => MODE::DIRECTORY,
             _ => MODE::DEFAULT,
         }
@@ -194,15 +194,24 @@ impl GenPrompt {
         }
     }
 
+    pub fn param_valid(&mut self, argv: Vec<String>) {
+
+        print!("Param Validation . . .");
+        let mut idx = 0;
+        for param in argv {
+            println!("[{}] : [{}]", idx, param);
+            idx += 1;
+        }
+
+    }
 
     pub fn run(&mut self, argv: Vec<String>) {
 
         self.mode = self.set_mode_by_prefix(argv[1].clone());
 
-
-
         match self.mode {
             MODE::DEFAULT => { self.print_help(); }
+            MODE::TEST => {self.param_valid(argv.clone())}
             MODE::DIRECTORY => {self.parse(argv.clone());}
             _ => { self.print_help(); }
         }
