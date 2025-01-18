@@ -117,18 +117,23 @@ impl GenPrompt {
         match command.as_str() {
             "cpp" => {
                 CodeGenOptionManager::set_gen_laungauge_mode(GenType::CPP);
+                println!("Set cpp generate mode");
             },
             "rust" => { 
                 CodeGenOptionManager::set_gen_laungauge_mode(GenType::RUST);
+                println!("Set rust generate mode");
             },
             "go" => { 
                 CodeGenOptionManager::set_gen_laungauge_mode(GenType::GO);
+                println!("Set go generate mode"); 
             },
             "python" => { 
                 CodeGenOptionManager::set_gen_laungauge_mode(GenType::PYTHON);
+                println!("Set python generate mode");
             },
             "csharp" => { 
                 CodeGenOptionManager::set_gen_laungauge_mode(GenType::CSHARP);
+                println!("Set csharp generate mode");
             },
             _ => {println!("Unsupported type . . .");}
         }
@@ -140,9 +145,12 @@ impl GenPrompt {
     // use case :  qnerator -f ExampleMEssage.qsmb cpp Example
     // use case :  qnerator -d ExampleMEssages cpp Example
 
+    println!("Start Setting Generate Options");
     
     self.set_generate_lanugage_by_console_argv(argv[3].clone());
+    println!("Set Generate Language Options");
     self.set_generate_directory_by_param(argv[4].clone());
+    println!("Set Generate Directory");
 
         match self.mode {
             MODE::DIRECTORY => {
@@ -189,6 +197,7 @@ impl GenPrompt {
                 CodeGenOptionManager::set_generate_direcotry("gen/".to_string());
             }
             _ => { 
+                println!("set generate directory : {}", param.clone());
                 CodeGenOptionManager::set_generate_direcotry(param);
             }
         }
@@ -212,7 +221,11 @@ impl GenPrompt {
         match self.mode {
             MODE::DEFAULT => { self.print_help(); }
             MODE::TEST => {self.param_valid(argv.clone())}
-            MODE::DIRECTORY => {self.parse(argv.clone());}
+            MODE::DIRECTORY => {
+                self.param_valid(argv.clone());
+                println!("Direcotry Mode . . .");
+                self.parse(argv.clone());
+            }
             _ => { self.print_help(); }
         }
 

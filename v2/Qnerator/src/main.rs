@@ -10,12 +10,12 @@ fn main() {
     let args: Vec<String> = env::args().collect();
 
     if args.len() > 2 {
+        println!("Prompt Run . . .");
         _prompt.run(args);
     } else {
         _prompt.print_help();
     }
 
 
-    // _prompt.
 
 }
