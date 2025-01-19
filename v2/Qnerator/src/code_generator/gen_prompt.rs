@@ -162,7 +162,7 @@ impl GenPrompt {
     self.set_generate_directory_by_param(_generate_file_dir);
     println!("Set Generate Directory");
 
-    return;
+    // return;
 
         match self.mode {
             MODE::DIRECTORY => {
@@ -195,7 +195,7 @@ impl GenPrompt {
                     }
                     Err(e) => eprintln!("Error reading directory: {}", e),
                 }
-            
+                
             },
             _ => {println!("Unexpected action . . . .");}
         }
@@ -227,20 +227,65 @@ impl GenPrompt {
     }
 
     pub fn run(&mut self, argv: Vec<String>) {
-
+        println!("Entering run function with arguments: {:?}", argv);
+    
+        if argv.len() < 2 {
+            println!("Insufficient arguments.");
+            self.print_help();
+            return;
+        }
+    
         self.mode = self.set_mode_by_prefix(argv[1].clone());
-
+    
         match self.mode {
-            MODE::DEFAULT => { self.print_help(); }
-            MODE::TEST => {self.param_valid(argv.clone())}
-            MODE::DIRECTORY => {
+            MODE::DEFAULT => {
+                self.print_help();
+            }
+            MODE::TEST => {
                 self.param_valid(argv.clone());
-                println!("Direcotry Mode . . .");
+            }
+            MODE::DIRECTORY => {
+                println!("Directory Mode . . .");
                 self.parse(argv.clone());
             }
-            _ => { self.print_help(); }
         }
+    }
 
+    fn handle_directory_mode(&mut self, argv: Vec<String>) {
+        println!("Start Setting Generate Options");
+
+        let _target_file_dir = argv[2].clone();
+        let _generate_lang_str = argv[3].clone();
+        let _generate_file_dir = argv[4].clone();
+
+        println!("Target File Dir : {}", _target_file_dir);
+        println!("Generate Mode Str : {}", _generate_lang_str);
+        println!("Generate File Dir : {}", _generate_file_dir);
+
+        CodeGenOptionManager::set_target_file_direcotry(_target_file_dir);
+        println!("Set Target File Directory");
+        self.set_generate_lanugage_by_console_argv(_generate_lang_str);
+        println!("Set Generate Language Options");
+        self.set_generate_directory_by_param(_generate_file_dir);
+        println!("Set Generate Directory");
+
+        let directory = argv[2].clone();
+
+        match Self::find_file_from_directory(directory) {
+            Ok(files) => {
+                if files.is_empty() {
+                    println!("No .qsmb files found in the directory.");
+                } else {
+                    println!("Found .qsmb files:");
+                    for file in files {
+                        println!("Start Parse {}", file);
+                        CodeGenOptionManager::set_file_name(file);
+                        let mut _parse_result = self.parse_file();
+                    }
+                }
+            }
+            Err(e) => eprintln!("Error reading directory: {}", e),
+        }
     }
 
 }

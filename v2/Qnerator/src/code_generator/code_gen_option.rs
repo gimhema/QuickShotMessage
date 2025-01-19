@@ -13,7 +13,9 @@ pub struct CodeGenOptionManager {
 
 impl CodeGenOptionManager {
     pub fn new() -> Self {
-        return CodeGenOptionManager::new()   
+        CodeGenOptionManager {
+            gen_option: CodeGenProperty::new(),
+        }
     }
 
     pub fn get_instance() -> &'static Arc<RwLock<CodeGenOptionManager>> {
