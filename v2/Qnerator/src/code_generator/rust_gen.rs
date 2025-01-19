@@ -14,7 +14,7 @@ pub struct RustGenerator {
 
 impl RustGenerator {
     pub fn new() -> Self {
-        return RustGenerator::new()
+        return RustGenerator{}
     }
 
     pub fn format_rust_code(&mut self, file_name: String, fields: Vec<(String, String)>) -> String {
