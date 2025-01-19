@@ -147,10 +147,22 @@ impl GenPrompt {
 
     println!("Start Setting Generate Options");
     
-    self.set_generate_lanugage_by_console_argv(argv[3].clone());
+    let _target_file_dir = argv[2].clone();
+    let _generate_lang_str = argv[3].clone();
+    let _generate_file_dir = argv[4].clone();
+
+    println!("Target File Dir : {}", _target_file_dir);
+    println!("Generate Mode Str : {}", _generate_lang_str);
+    println!("Generate File Dir : {}", _generate_file_dir);
+
+    CodeGenOptionManager::set_target_file_direcotry(_target_file_dir);
+    println!("Set Target  File Directory");
+    self.set_generate_lanugage_by_console_argv(_generate_lang_str);
     println!("Set Generate Language Options");
-    self.set_generate_directory_by_param(argv[4].clone());
+    self.set_generate_directory_by_param(_generate_file_dir);
     println!("Set Generate Directory");
+
+    return;
 
         match self.mode {
             MODE::DIRECTORY => {
@@ -163,7 +175,7 @@ impl GenPrompt {
                 // qnerator -d <TARGET_FILE_DIRECTORY> <GENERATE_LANGUAGE> <GENERATE_DIRECTORY>
                 // Example 1: qnerator -d /targets rust - => will generate /gen directory
                 // Example 2: qnerator -d /targets rust /custom => will generate /custom directory
-                CodeGenOptionManager::set_target_file_direcotry(argv[2].clone());
+
 
                 let directory = argv[2].clone();
 
