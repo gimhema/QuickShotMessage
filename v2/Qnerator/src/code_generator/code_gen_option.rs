@@ -77,6 +77,13 @@ impl CodeGenOptionManager {
         _inst.gen_option.set_generated_source_code(_src.clone());
     }
 
+    pub fn get_code_gen_lang_option_by_string() -> String {
+        let mut _inst = CodeGenOptionManager::get_instance().write().unwrap();
+        let mut _result = _inst.gen_option.get_language_option_as_string();
+
+        return _result
+    }
+
 }
 
 
@@ -150,5 +157,35 @@ impl CodeGenProperty {
         self.gen_mode = _type;
     }
 
+    pub fn get_language_option_as_string(&self) -> String {
+
+        let mut result = "".to_string();
+
+        match self.gen_mode {
+            GenType::CPP => {
+                result = "cpp".to_string();
+            },
+            GenType::RUST => {
+                result = "cpp".to_string();
+            },
+            GenType::PYTHON => {
+                result = "cpp".to_string();
+            },
+            GenType::GO => {
+                result = "cpp".to_string();
+            },
+            GenType::CSHARP => {
+                result = "cpp".to_string();
+            },
+            GenType::NONE => {
+                result = "none".to_string();
+            },
+            _ => {
+                result = "none".to_string();
+            }
+        }        
+
+        return result
+    }
 
 }

@@ -147,10 +147,12 @@ impl RustGenerator {
 impl CodeGenerator for RustGenerator {
     fn generate(&mut self) {
 
+        println!("================= Generate Option =================");
         let mut _source = CodeGenOptionManager::get_generated_source_code();
         let mut _file_path = CodeGenOptionManager::get_file_name();
         let mut _directory = CodeGenOptionManager::get_generate_directory();
         let mut _gen_mode = CodeGenOptionManager::get_gen_laungauge_mode();
+        println!("================= Generate Option =================");
 
         self.write(_directory, 
             _file_path, 
@@ -160,9 +162,13 @@ impl CodeGenerator for RustGenerator {
 
     fn parse(&mut self) {
 
+        println!("========== Parse Option ==========");
         let directory_name = CodeGenOptionManager::get_target_file_directory();
+        println!("Tareget Directory : {}", directory_name.clone());
         let file_name = CodeGenOptionManager::get_file_name();
+        println!("Tareget File Name : {}", file_name.clone());
         let _fileds_name = Self::get_first_part(file_name.as_str());
+        println!("========== Parse Option ==========");
 
         let fields = read_parse_struct(directory_name, file_name.clone());
         let rust_code = self.format_rust_code(_fileds_name.to_string(), fields);
