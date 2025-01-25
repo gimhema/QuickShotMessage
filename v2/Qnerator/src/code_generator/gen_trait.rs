@@ -73,18 +73,21 @@ pub trait CodeGenerator {
                 return None;
             }
         };
-    
-        Some(file_name + _file_format)
+        
+        let mut _result = file_name + _file_format;
+        println!("code will be generated as {}", _result);
+
+        Some(_result)
     }
 
     fn write(&mut self, _directory: String, _file_name: String, _source: String, _gen_mode : GenType) {
-        println!("Code Generate . . . .");
         
         let mut _generate_file_name = self.change_file_format_by_gen_mode(_file_name, _gen_mode);
 
         // Create the full path by combining directory and file path
         let full_path = Path::new(&_directory).join(&_generate_file_name.unwrap());
-    
+
+        
         // Try to open the file for writing
         match File::create(&full_path) {
             Ok(mut file) => {
