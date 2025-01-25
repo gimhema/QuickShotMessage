@@ -150,8 +150,13 @@ impl CodeGenerator for RustGenerator {
         println!("================= Generate Option =================");
         let mut _source = CodeGenOptionManager::get_generated_source_code();
         let mut _file_path = CodeGenOptionManager::get_file_name();
+        println!("Generate File Name : {}", _file_path.clone());
         let mut _directory = CodeGenOptionManager::get_generate_directory();
+        println!("Generate File Path : {}", _directory.clone());
         let mut _gen_mode = CodeGenOptionManager::get_gen_laungauge_mode();
+
+        let mut _gen_mode_str = CodeGenOptionManager::get_code_gen_lang_option_by_string();
+        println!("Generate Language : {}", _gen_mode_str.clone());
         println!("================= Generate Option =================");
 
         self.write(_directory, 
@@ -168,6 +173,7 @@ impl CodeGenerator for RustGenerator {
         let file_name = CodeGenOptionManager::get_file_name();
         println!("Tareget File Name : {}", file_name.clone());
         let _fileds_name = Self::get_first_part(file_name.as_str());
+        println!("Data Fileds Name : {}", _fileds_name);
         println!("========== Parse Option ==========");
 
         let fields = read_parse_struct(directory_name, file_name.clone());
