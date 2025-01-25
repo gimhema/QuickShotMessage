@@ -8,40 +8,56 @@ use std::path::Path;
 
 
 
-pub fn read_parse_struct(direcotry_name : String, file_name : String) -> Vec<(String, String)> {
+pub fn read_parse_struct(directory_name: String, file_name: String) -> Vec<(String, String)> {
+    // 안전하게 파일 경로 생성
+    let file_path = Path::new(&directory_name).join(&file_name);
 
-    let mut _read_file_dir = format!("{}{}", direcotry_name, file_name);
-    
     let mut fields = Vec::new();
-        
-        // 파일 열기
-        if let Ok(file) = File::open(&_read_file_dir) {
+
+    // 파일 열기
+    match File::open(&file_path) {
+        Ok(file) => {
             let reader = BufReader::new(file);
-    
-            for line in reader.lines().flatten() {
-                let trimmed_line = line.trim();
-                
-                // 필드 타입과 이름을 가져오기
-                let parts: Vec<&str> = trimmed_line.split_whitespace().collect();
-                if parts.len() == 2 {
-                    let field_type = match parts[0] {
-                        "Integer" => "Integer".to_string(),
-                        "Long" => "Long".to_string(),
-                        "Float" => "Float".to_string(),
-                        "String" => "String".to_string(),
-                        "ArrayInteger" => "ArrayInteger".to_string(),
-                        "ArrayFloat" => "ArrayFloat".to_string(),
-                        _ => continue,
-                    };
-                    
-                    let field_name = parts[1].to_string();
-    
-                    fields.push((field_type, field_name));
+
+            for (line_num, line) in reader.lines().enumerate() {
+                if let Ok(trimmed_line) = line {
+                    let trimmed_line = trimmed_line.trim();
+
+                    // 빈 줄이나 주석 무시
+                    if trimmed_line.is_empty() || trimmed_line.starts_with("//") {
+                        continue;
+                    }
+
+                    // 필드 타입과 이름 추출
+                    let parts: Vec<&str> = trimmed_line.split_whitespace().collect();
+                    if parts.len() == 2 {
+                        let field_type = match parts[0] {
+                            "Integer" | "Long" | "Float" | "String" | "ArrayInteger" | "ArrayFloat" => {
+                                parts[0].to_string()
+                            }
+                            _ => {
+                                println!(
+                                    "Warning: Unrecognized type '{}' on line {}",
+                                    parts[0], line_num + 1
+                                );
+                                continue;
+                            }
+                        };
+
+                        let field_name = parts[1].to_string();
+                        fields.push((field_type, field_name));
+                    } else {
+                        println!("Warning: Invalid line format on line {}", line_num + 1);
+                    }
                 }
             }
         }
-    
-        fields
+        Err(e) => {
+            println!("Error: Failed to open file '{}'. Reason: {}", file_path.display(), e);
+        }
+    }
+
+    fields
 }
 
 pub trait CodeGenerator {

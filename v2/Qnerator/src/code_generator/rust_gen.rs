@@ -177,6 +177,13 @@ impl CodeGenerator for RustGenerator {
         println!("========== Parse Option ==========");
 
         let fields = read_parse_struct(directory_name, file_name.clone());
+
+        println!("Data Fileds Result");
+
+        for (key, value) in &fields {
+            println!("Key: {}, Value: {}", key, value);
+        }
+
         let rust_code = self.format_rust_code(_fileds_name.to_string(), fields);
         
         println!("{}", rust_code);
