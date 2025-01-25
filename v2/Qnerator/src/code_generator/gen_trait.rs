@@ -59,6 +59,10 @@ pub trait CodeGenerator {
     }
 
     fn change_file_format_by_gen_mode(&mut self, _file_name: String, _gen_mode: GenType) -> Option<String> {
+
+        println!("Start change file name step");
+        println!("Original file name : {}", _file_name);
+
         // Split the file name by '.' and handle the case where no '.' exists
         let mut parts = _file_name.rsplitn(2, '.'); // Split from the right, max 2 parts
         let file_name = parts.next()?.to_string();
@@ -74,6 +78,9 @@ pub trait CodeGenerator {
             }
         };
         
+        println!("Changed file name : {}", _file_name);
+        println!("Changed file format : {}", _file_format);
+
         let mut _result = file_name + _file_format;
         println!("code will be generated as {}", _result);
 
