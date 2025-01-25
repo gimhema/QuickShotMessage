@@ -166,16 +166,16 @@ impl CodeGenProperty {
                 result = "cpp".to_string();
             },
             GenType::RUST => {
-                result = "cpp".to_string();
+                result = "rust".to_string();
             },
             GenType::PYTHON => {
-                result = "cpp".to_string();
+                result = "python".to_string();
             },
             GenType::GO => {
-                result = "cpp".to_string();
+                result = "go".to_string();
             },
             GenType::CSHARP => {
-                result = "cpp".to_string();
+                result = "csharp".to_string();
             },
             GenType::NONE => {
                 result = "none".to_string();
