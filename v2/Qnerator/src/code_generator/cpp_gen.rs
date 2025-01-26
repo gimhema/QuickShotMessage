@@ -19,186 +19,181 @@ impl CPPGenerator {
         return CPPGenerator{}
     }
 
-    pub fn format_cpp_code(&mut self, struct_name: &str, fields: &[((String, String))]) -> String {
-        let mut cpp_code = String::new();
+        pub fn format_cpp_code(&mut self, struct_name: &str, fields: &[(String, String)]) -> String {
+            let mut cpp_code = String::new();
     
-        // Structure definition
-        cpp_code.push_str(&format!("#pragma pack(push, 1)\nstruct {} {{\n", struct_name));
+            // Structure definition
+            cpp_code.push_str(&format!("#pragma pack(push, 1)\nstruct {} {{\n", struct_name));
     
-        // Field definitions
-        for (typ, name) in fields {
-            let cpp_type = match &typ[..] {  // typ은 String이므로, 그대로 사용.
-                "Integer" => "uint32_t".to_string(),
-                "Long" => "uint64_t".to_string(),
-                "Float" => "float".to_string(),
-                "String" => "std::string".to_string(),
-                typ if typ.starts_with("Array") => {
-                    let element_type = match &typ[6..] {
-                        "Integer" => "int32_t".to_string(),
-                        "Long" => "int64_t".to_string(),
-                        "Float" => "float".to_string(),
-                        "String" => "std::string".to_string(),
-                        _ => panic!("Unsupported array type: {}", &typ[6..]),
-                    };
-                    format!("std::vector<{}>", element_type)
-                }
-                _ => panic!("Unsupported type: {}", typ),
-            };
-            cpp_code.push_str(&format!("    {} {};\n", cpp_type, name));
-        }
-    
-        // Constructor params handling
-        let constructor_params: Vec<String> = fields.iter().map(|(typ, name)| {
-            let cpp_type = match &typ[..] {  // typ은 String이므로, 그대로 사용.
-                "Integer" => "uint32_t".to_string(),
-                "Long" => "uint64_t".to_string(),
-                "Float" => "float".to_string(),
-                "String" => "std::string".to_string(),
-                typ if typ.starts_with("Array") => {
-                    let element_type = match &typ[6..] {
-                        "Integer" => "int32_t".to_string(),
-                        "Long" => "int64_t".to_string(),
-                        "Float" => "float".to_string(),
-                        "String" => "std::string".to_string(),
-                        _ => panic!("Unsupported array type: {}", &typ[6..]),
-                    };
-                    format!("std::vector<{}>", element_type)
-                }
-                _ => panic!("Unsupported type: {}", typ),
-            };
-            format!("{} {}", cpp_type, name)
-        }).collect();
-    
-        cpp_code.push_str(&format!(
-            "\n    {}({}) : ",
-            struct_name,
-            constructor_params.join(", ")
-        ));
-    
-        let init_list: Vec<String> = fields.iter().map(|(_, name)| format!("{}({})", name, name)).collect();
-        cpp_code.push_str(&init_list.join(", "));
-        cpp_code.push_str(" {}\n\n");
-    
-        // Serialize function
-        cpp_code.push_str("    std::vector<uint8_t> serialize() const {\n");
-        cpp_code.push_str("        std::vector<uint8_t> buffer;\n");
-
-        for (typ, name) in fields {
-            match typ.as_str() {
-                "Integer" | "Long" | "Float" => {
-                    cpp_code.push_str(&format!(
-                        "        buffer.insert(buffer.end(), reinterpret_cast<const uint8_t*>(&{}), reinterpret_cast<const uint8_t*>(&{} + 1));\n",
-                        name, name
-                    ));
-                }
-                "String" => {
-                    cpp_code.push_str(&format!(
-                        "        buffer.insert(buffer.end(), reinterpret_cast<const uint8_t*>(&{}.size()), reinterpret_cast<const uint8_t*>(&{}.size() + 1));\n",
-                        name, name
-                    ));
-                    cpp_code.push_str(&format!(
-                        "        buffer.insert(buffer.end(), {}.begin(), {}.end());\n",
-                        name, name
-                    ));
-                }
-                typ if typ.starts_with("Array") => {
-                    cpp_code.push_str(&format!(
-                        "        buffer.insert(buffer.end(), reinterpret_cast<const uint8_t*>(&{}.size()), reinterpret_cast<const uint8_t*>(&{}.size() + 1));\n",
-                        name, name
-                    ));
-                    cpp_code.push_str(&format!(
-                        "        buffer.insert(buffer.end(), reinterpret_cast<const uint8_t*>({}.data()), reinterpret_cast<const uint8_t*>({}.data() + {}.size()));\n",
-                        name, name, name
-                    ));
-                }
-                _ => panic!("Unsupported type: {}", typ),
+            // Field definitions
+            for (typ, name) in fields {
+                let cpp_type = match typ.as_str() {
+                    "Integer" => "uint32_t".to_string(),
+                    "Long" => "uint64_t".to_string(),
+                    "Float" => "float".to_string(),
+                    "String" => "std::string".to_string(),
+                    typ if typ.starts_with("Array") => {
+                        let element_type = &typ[5..]; // "Array" 이후 타입 추출
+                        let cpp_element_type = match element_type {
+                            "Integer" => "int32_t",
+                            "Long" => "int64_t",
+                            "Float" => "float",
+                            "String" => "std::string",
+                            _ => panic!("Unsupported array type: {}", element_type),
+                        };
+                        format!("std::vector<{}>", cpp_element_type)
+                    }
+                    _ => panic!("Unsupported type: {}", typ),
+                };
+                cpp_code.push_str(&format!("    {} {};\n", cpp_type, name));
             }
-        }
-        cpp_code.push_str("        return buffer;\n    }\n\n");
-
-        // Deserialize function
-        cpp_code.push_str(&format!(
-            "    static {} deserialize(const std::vector<uint8_t>& buffer) {{\n",
-            struct_name
-        ));
-        cpp_code.push_str("        size_t offset = 0;\n");
-
-        let mut deserialized_fields = Vec::new();
-        for (typ, name) in fields {
-            match typ.as_str() {
-                "Integer" => cpp_code.push_str(&format!(
-                    "        uint32_t {} = *reinterpret_cast<const uint32_t*>(buffer.data() + offset);\n        offset += sizeof(uint32_t);\n",
-                    name
-                )),
-                "Long" => cpp_code.push_str(&format!(
-                    "        uint64_t {} = *reinterpret_cast<const uint64_t*>(buffer.data() + offset);\n        offset += sizeof(uint64_t);\n",
-                    name
-                )),
-                "Float" => cpp_code.push_str(&format!(
-                    "        float {} = *reinterpret_cast<const float*>(buffer.data() + offset);\n        offset += sizeof(float);\n",
-                    name
-                )),
-                "String" => {
-                    cpp_code.push_str(&format!(
-                        "        uint32_t {0}_length = *reinterpret_cast<const uint32_t*>(buffer.data() + offset);\n        offset += sizeof(uint32_t);\n",
-                        name
-                    ));
-                    cpp_code.push_str(&format!(
-                        "        std::string {0}(buffer.begin() + offset, buffer.begin() + offset + {0}_length);\n        offset += {0}_length;\n",
-                        name
-                    ));
-                }
-                typ if typ.starts_with("Array") => {
-                    cpp_code.push_str(&format!(
-                        "        uint32_t {0}_length = *reinterpret_cast<const uint32_t*>(buffer.data() + offset);\n        offset += sizeof(uint32_t);\n",
-                        name
-                    ));
-                    let element_type = match &typ[6..] {
-                        "Integer" => "int32_t",
-                        "Long" => "int64_t",
-                        "Float" => "float",
-                        "String" => "std::string",
-                        _ => panic!("Unsupported array type: {}", &typ[6..]),
-                    };
-                    cpp_code.push_str(&format!(
-                        "        std::vector<{}> {}({}_length);\n",
-                        element_type, name, name
-                    ));
-                    cpp_code.push_str(&format!(
-                        "        std::memcpy({}.data(), buffer.data() + offset, {}_length * sizeof({}));\n        offset += {}_length * sizeof({});\n",
-                        name, name, element_type, name, element_type
-                    ));
-                }
-                _ => panic!("Unsupported type: {}", typ),
-            }
-            deserialized_fields.push(name.to_string());
-        }
-
-        cpp_code.push_str(&format!(
-            "        return {}({});\n    }}\n",
-            struct_name,
-            deserialized_fields.join(", ")
-        ));
-
-        // Friend operator<< overload
-        cpp_code.push_str(&format!(
-            "    friend std::ostream& operator<<(std::ostream& os, const {}& data) {{\n",
-            struct_name
-        ));
-        cpp_code.push_str(&format!("        os << \"{} {{ ", struct_name));
-        for (i, (_, name)) in fields.iter().enumerate() {
-            cpp_code.push_str(&format!("{}: \" << data.{}", name, name));
-            if i < fields.len() - 1 {
-                cpp_code.push_str(" << \", ");
-            }
-        }
-        cpp_code.push_str(" << \" }\";\n        return os;\n    }\n};\n");
-        cpp_code.push_str("#pragma pack(pop)\n");
-
+    
+            let constructor_params: Vec<String> = fields
+            .iter()
+            .map(|(typ, name)| {
+                let cpp_type = match typ.as_str() {
+                    "Integer" => "uint32_t".to_string(),
+                    "Long" => "uint64_t".to_string(),
+                    "Float" => "float".to_string(),
+                    "String" => "std::string".to_string(),
+                    typ if typ.starts_with("Array") => {
+                        let element_type = match &typ[5..] {
+                            "Integer" => "int32_t",
+                            "Long" => "int64_t",
+                            "Float" => "float",
+                            "String" => "std::string",
+                            _ => panic!("Unsupported array type: {}", &typ[5..]),
+                        };
+                        format!("std::vector<{}>", element_type) // String 반환
+                    }
+                    _ => panic!("Unsupported type: {}", typ),
+                };
+                format!("{} {}", cpp_type, name) // 최종적으로 String 반환
+            })
+            .collect();
+        
 
     
-        cpp_code
-    }
+            let init_list: Vec<String> = fields.iter().map(|(_, name)| format!("{}({})", name, name)).collect();
+            cpp_code.push_str(&format!(
+                "\n    {}({}) : {} {{}}\n\n",
+                struct_name,
+                constructor_params.join(", "),
+                init_list.join(", ")
+            ));
+    
+            // Serialize function
+            cpp_code.push_str("    std::vector<uint8_t> serialize() const {\n");
+            cpp_code.push_str("        std::vector<uint8_t> buffer;\n");
+    
+            for (typ, name) in fields {
+                match typ.as_str() {
+                    "Integer" | "Long" | "Float" => {
+                        cpp_code.push_str(&format!(
+                            "        buffer.insert(buffer.end(), reinterpret_cast<const uint8_t*>(&{}), reinterpret_cast<const uint8_t*>(&{} + 1));\n",
+                            name, name
+                        ));
+                    }
+                    "String" => {
+                        cpp_code.push_str(&format!(
+                            "        uint32_t {0}_length = {0}.size();\n",
+                            name
+                        ));
+                        cpp_code.push_str(&format!(
+                            "        buffer.insert(buffer.end(), reinterpret_cast<const uint8_t*>(&{0}_length), reinterpret_cast<const uint8_t*>(&{0}_length + 1));\n",
+                            name
+                        ));
+                        cpp_code.push_str(&format!(
+                            "        buffer.insert(buffer.end(), {0}.begin(), {0}.end());\n",
+                            name
+                        ));
+                    }
+                    typ if typ.starts_with("Array") => {
+                        cpp_code.push_str(&format!(
+                            "        uint32_t {0}_size = {0}.size();\n",
+                            name
+                        ));
+                        cpp_code.push_str(&format!(
+                            "        buffer.insert(buffer.end(), reinterpret_cast<const uint8_t*>(&{0}_size), reinterpret_cast<const uint8_t*>(&{0}_size + 1));\n",
+                            name
+                        ));
+                        cpp_code.push_str(&format!(
+                            "        buffer.insert(buffer.end(), reinterpret_cast<const uint8_t*>({0}.data()), reinterpret_cast<const uint8_t*>({0}.data() + {0}_size));\n",
+                            name
+                        ));
+                    }
+                    _ => panic!("Unsupported type: {}", typ),
+                }
+            }
+            cpp_code.push_str("        return buffer;\n    }\n\n");
+    
+            // Deserialize function
+            cpp_code.push_str(&format!(
+                "    static {} deserialize(const std::vector<uint8_t>& buffer) {{\n",
+                struct_name
+            ));
+            cpp_code.push_str("        size_t offset = 0;\n");
+    
+            let mut deserialized_fields = Vec::new();
+            for (typ, name) in fields {
+                match typ.as_str() {
+                    "Integer" => cpp_code.push_str(&format!(
+                        "        uint32_t {} = *reinterpret_cast<const uint32_t*>(buffer.data() + offset);\n        offset += sizeof(uint32_t);\n",
+                        name
+                    )),
+                    "Long" => cpp_code.push_str(&format!(
+                        "        uint64_t {} = *reinterpret_cast<const uint64_t*>(buffer.data() + offset);\n        offset += sizeof(uint64_t);\n",
+                        name
+                    )),
+                    "Float" => cpp_code.push_str(&format!(
+                        "        float {} = *reinterpret_cast<const float*>(buffer.data() + offset);\n        offset += sizeof(float);\n",
+                        name
+                    )),
+                    "String" => {
+                        cpp_code.push_str(&format!(
+                            "        uint32_t {0}_length = *reinterpret_cast<const uint32_t*>(buffer.data() + offset);\n        offset += sizeof(uint32_t);\n",
+                            name
+                        ));
+                        cpp_code.push_str(&format!(
+                            "        std::string {0}(buffer.begin() + offset, buffer.begin() + offset + {0}_length);\n        offset += {0}_length;\n",
+                            name
+                        ));
+                    }
+                    typ if typ.starts_with("Array") => {
+                        cpp_code.push_str(&format!(
+                            "        uint32_t {0}_size = *reinterpret_cast<const uint32_t*>(buffer.data() + offset);\n        offset += sizeof(uint32_t);\n",
+                            name
+                        ));
+                        let element_type = match &typ[5..] {
+                            "Integer" => "int32_t",
+                            "Long" => "int64_t",
+                            "Float" => "float",
+                            _ => panic!("Unsupported array type: {}", &typ[5..]),
+                        };
+                        cpp_code.push_str(&format!(
+                            "        std::vector<{}> {}({}_size);\n",
+                            element_type, name, name
+                        ));
+                        cpp_code.push_str(&format!(
+                            "        std::memcpy({}.data(), buffer.data() + offset, {}_size * sizeof({}));\n        offset += {}_size * sizeof({});\n",
+                            name, name, element_type, name, element_type
+                        ));
+                    }
+                    _ => panic!("Unsupported type: {}", typ),
+                }
+                deserialized_fields.push(name.to_string());
+            }
+    
+            cpp_code.push_str(&format!(
+                "        return {}({});\n    }}\n",
+                struct_name,
+                deserialized_fields.join(", ")
+            ));
+    
+            cpp_code.push_str("};\n#pragma pack(pop)\n");
+    
+            cpp_code
+        }
     
     
 }
