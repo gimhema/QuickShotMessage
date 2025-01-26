@@ -16,7 +16,7 @@ pub struct CPPGenerator{
 
 impl CPPGenerator {
     pub fn new() -> Self {
-        return CPPGenerator::new()
+        return CPPGenerator{}
     }
 
     pub fn format_cpp_code(&mut self, struct_name: &str, fields: &[((String, String))]) -> String {
