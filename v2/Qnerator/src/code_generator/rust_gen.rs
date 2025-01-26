@@ -154,6 +154,7 @@ impl RustGenerator {
             deserialization_code = deserialization_code.trim_end()
         )
     }
+    
         
 
 
