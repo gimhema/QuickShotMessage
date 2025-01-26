@@ -49,6 +49,22 @@ impl RustGenerator {
                         field_name
                     ));
                 }
+                "Float" => {
+                    struct_fields.push_str(&format!("    {}: f32,\n", field_name));
+                    constructor_params.push_str(&format!("{}: f32, ", field_name));
+                    constructor_assignments.push_str(&format!("            {},\n", field_name));
+                    serialization_code.push_str(&format!(
+                        "        buffer.extend(&self.{}.to_le_bytes());\n",
+                        field_name
+                    ));
+                    deserialization_code.push_str(&format!(
+                        "        let mut {0}_bytes = [0u8; 4];\n\
+                         {0}_bytes.copy_from_slice(&buffer[offset..offset + 4]);\n\
+                         let {0} = f32::from_le_bytes({0}_bytes);\n\
+                         offset += 4;\n",
+                        field_name
+                    ));
+                }
                 "String" => {
                     struct_fields.push_str(&format!("    {}: String,\n", field_name));
                     struct_fields.push_str(&format!("    {}_length: u32,\n", field_name));
@@ -105,31 +121,31 @@ impl RustGenerator {
         // 최종 Rust 코드 생성
         format!(
             "// 자동 생성된 구조체 및 관련 메서드
-    #[repr(C)]
-    #[derive(Debug, Clone)]
-    pub struct {struct_name} {{
-    {struct_fields}}}
+        #[repr(C)]
+        #[derive(Debug, Clone)]
+        pub struct {struct_name} {{
+        {struct_fields}}}
     
-    impl {struct_name} {{
-        pub fn new({constructor_params}) -> Self {{
-            Self {{
-    {constructor_assignments}        }}
-        }}
+        impl {struct_name} {{
+            pub fn new({constructor_params}) -> Self {{
+                Self {{
+        {constructor_assignments}        }}
+            }}
     
-        pub fn serialize(&self) -> Vec<u8> {{
-            let mut buffer = Vec::new();
-    {serialization_code}
-            buffer
-        }}
+            pub fn serialize(&self) -> Vec<u8> {{
+                let mut buffer = Vec::new();
+        {serialization_code}
+                buffer
+            }}
     
-        pub fn deserialize(buffer: &[u8]) -> io::Result<Self> {{
-            let mut offset = 0;
-    {deserialization_code}
-            Ok(Self {{
-                {constructor_assignments}
-            }})
-        }}
-    }}",
+            pub fn deserialize(buffer: &[u8]) -> io::Result<Self> {{
+                let mut offset = 0;
+        {deserialization_code}
+                Ok(Self {{
+                    {constructor_assignments}
+                }})
+            }}
+        }}",
             struct_name = struct_name,
             struct_fields = struct_fields.trim_end(),
             constructor_params = constructor_params.trim_end_matches(", "),
@@ -138,7 +154,7 @@ impl RustGenerator {
             deserialization_code = deserialization_code.trim_end()
         )
     }
-    
+        
 
 
 }
